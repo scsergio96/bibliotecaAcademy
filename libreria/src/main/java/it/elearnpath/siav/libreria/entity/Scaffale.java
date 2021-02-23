@@ -1,5 +1,7 @@
 package it.elearnpath.siav.libreria.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,7 +21,9 @@ public class Scaffale {
 
     private Integer ripiano;
 
-    @OneToMany(mappedBy = "scaffale", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posizioneBiblioteca", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "scaffale-libro")
+    @JsonIgnore
     private List<Libro> libri;
 
 }

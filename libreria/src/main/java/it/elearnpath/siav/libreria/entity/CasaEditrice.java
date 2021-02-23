@@ -1,5 +1,7 @@
 package it.elearnpath.siav.libreria.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,6 +24,8 @@ public class CasaEditrice {
     private String indirizzo;
 
     @OneToMany(mappedBy = "casaEditrice", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "casa-libro")
+    @JsonIgnore
     private List<Libro> libri;
 
 }
