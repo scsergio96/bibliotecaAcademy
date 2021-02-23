@@ -4,21 +4,30 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "libro")
-//@Data
+// @Data
 public class Libro {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
+    @Size(min = 1, max = 100)
     private String titolo;
 
+    @NotNull
+    @Size(min = 1, max = 50)
     private String genere;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -26,18 +35,25 @@ public class Libro {
     @JsonBackReference(value = "casa-libro")
     private CasaEditrice casaEditrice;
 
-    private Integer isbn;
+    @NotNull
+    @Size(min = 10, max = 20)
+    private String isbn;
 
+    @NotNull
     private Integer pagine;
 
     private Integer ristampa;
 
+    @Size(max = 256)
     private String descrizione;
 
+    @Size(max = 50)
     private String lingua;
 
+    @Past
     private Date primaEdizione;
 
+    @Past
     private Date ultimaRistampa;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -46,10 +62,7 @@ public class Libro {
     private Scaffale posizioneBiblioteca;
 
     @ManyToMany
-    @JoinTable(
-            name = "autore_libro",
-            joinColumns = @JoinColumn(name = "idLibro"),
-            inverseJoinColumns = @JoinColumn(name = "idAutore"))
+    @JoinTable(name = "autore_libro", joinColumns = @JoinColumn(name = "idLibro"), inverseJoinColumns = @JoinColumn(name = "idAutore"))
     @JsonBackReference(value = "autore-libro")
     private List<Autore> autori;
 
@@ -88,13 +101,7 @@ public class Libro {
         this.casaEditrice = casaEditrice;
     }
 
-    public Integer getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(Integer isbn) {
-        this.isbn = isbn;
-    }
+   
 
     public Integer getPagine() {
         return pagine;
@@ -132,17 +139,34 @@ public class Libro {
         return primaEdizione;
     }
 
-    public void setPrimaEdizione(Date primaEdizione) {
-        this.primaEdizione = primaEdizione;
+    public void setPrimaEdizione(String primaEdizione) {
+        String pattern = "yyyy-MM-dd";
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date date = simpleDateFormat.parse(primaEdizione);
+            this.primaEdizione = date;
+        } catch (Exception e) {
+            // TODO: Creare error DateFormatException
+            e.getMessage();
+        }
     }
 
     public Date getUltimaRistampa() {
         return ultimaRistampa;
     }
 
-    public void setUltimaRistampa(Date ultimaRistampa) {
-        this.ultimaRistampa = ultimaRistampa;
-    }
+    public void setUltimaRistampa(String ultimaRistampa) {
+        String pattern = "yyyy-MM-dd";
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date date = simpleDateFormat.parse(ultimaRistampa);
+            this.ultimaRistampa = date;
+        } catch (Exception e) {
+            // TODO: Creare error DateFormatException
+            e.getMessage();
+        }    }
 
     public Scaffale getPosizioneBiblioteca() {
         return posizioneBiblioteca;
@@ -159,4 +183,12 @@ public class Libro {
     public void setAutori(List<Autore> autori) {
         this.autori = autori;
     }
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 }

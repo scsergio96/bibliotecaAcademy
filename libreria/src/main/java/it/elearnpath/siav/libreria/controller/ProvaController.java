@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 @RestController
 public class ProvaController {
 
@@ -73,7 +75,7 @@ public class ProvaController {
     }
 
     @PostMapping(value = "/autori/inserisci")
-    public ResponseEntity<Autore> inseriscoAutore(@RequestBody Autore autore) {
+    public ResponseEntity<Autore> inseriscoAutore(@RequestBody @Valid Autore autore) {
 
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -123,5 +125,45 @@ public class ProvaController {
 
         return new ResponseEntity<Scaffale>(headers, HttpStatus.CREATED);
 
+    } 
+    
+    @PostMapping(value = "/casaEditrice/inserisci")
+    public ResponseEntity<CasaEditrice> inseriscoCasaEditrice(@RequestBody CasaEditrice casaEditrice) {
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ObjectNode responseNode = objectMapper.createObjectNode();
+
+        casaEditriceRepository.save(casaEditrice);
+
+        responseNode.put("code", HttpStatus.OK.toString());
+        responseNode.put("message","Casa editrice inserita");
+
+        return new ResponseEntity<CasaEditrice>(headers, HttpStatus.CREATED);
+
     }
+
+    @PostMapping(value = "/libri/inserisci")
+    public ResponseEntity<Libro> inseriscoLibro(@RequestBody @Valid Libro libro ) {
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ObjectNode responseNode = objectMapper.createObjectNode();
+
+        libroRepository.save(libro);
+
+        responseNode.put("code", HttpStatus.OK.toString());
+        responseNode.put("message","Casa editrice inserita");
+
+        return new ResponseEntity<Libro>(headers, HttpStatus.CREATED);
+
+    }
+
+
 }

@@ -2,15 +2,23 @@ package it.elearnpath.siav.libreria.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "autore")
-//@Data
+// @Data
 public class Autore {
 
     @Id
@@ -18,17 +26,25 @@ public class Autore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
+    @Size(max = 50)
     private String nome;
 
+    @NotNull
+    @Size(max = 50)
     private String cognome;
 
+    @Past
     private Date dataNascita;
 
     private Date dataMorte;
 
+    @NotNull
     @Column(name = "nazionalità")
     private String nazionalita;
 
+    @NotNull
+    @Size(max = 256)
     private String biografia;
 
     @ManyToMany(mappedBy = "autori")
@@ -67,16 +83,34 @@ public class Autore {
         return dataNascita;
     }
 
-    public void setDataNascita(Date dataNascita) {
-        this.dataNascita = dataNascita;
+    public void setDataNascita(String dataNascita) {
+        String pattern = "yyyy-MM-dd";
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date date = simpleDateFormat.parse(dataNascita);
+            this.dataNascita = date;
+        } catch (Exception e) {
+            // TODO: Creare error DateFormatException
+            e.getMessage();
+        }
     }
 
     public Date getDataMorte() {
         return dataMorte;
     }
 
-    public void setDataMorte(Date dataMorte) {
-        this.dataMorte = dataMorte;
+    public void setDataMorte(String dataMorte) {
+        String pattern = "yyyy-MM-dd";
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date date = simpleDateFormat.parse(dataMorte);
+            this.dataMorte = date;
+        } catch (Exception e) {
+            // TODO: Creare error DateFormatException
+            e.getMessage();
+        }
     }
 
     public String getNazionalita() {
