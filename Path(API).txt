@@ -1,0 +1,55 @@
+LIBRI:
+
+GET /books/search/all "Restituisce tutti i libri presenti"   (utilizzare il paging)             Exceptions "NotFoundException"
+GET /books/search/{id} "Restituisce uno specifico libro in base al suo id se presente"          Exceptions "NotFoundException"
+GET /books/search/{isbn} "Restituisce uno specifico libro in base al suo isbn se presente"      Exceptions "NotFoundException"
+GET /books/search/{titolo} "Restituisce uno specifico libro in base al suo titolo se presente"  Exceptions "NotFoundException"
+
+
+POST /books/add     "Inserisce un nuovo libro"        Exceptions "DuplicateException; BindingException"
+
+PUT /books/update   "Modifca un libro se presente"    Exceptions "NotFoundException; BindingException"
+
+DELETE  /books/delete/{id} "Elimina un libro se presente"     Exceptions "NotFoundException; BindingException"
+DELETE  /books/delete/{isbn} "Elimina un libro se presente"   Exceptions "NotFoundException; BindingException"
+
+
+
+AUTORE:
+
+
+GET /authors/search/all "Restituisce tutti li autori presenti" (utilizzare il paging)  
+GET /authors/search/id  "Restituisce uno specifico autore se presente"
+
+POST /authors/add     "Inserisce un nuovo autore"        Exceptions "DuplicateException; BindingException"
+
+PUT /authors/update   "Modifca un autore se presente"    Exceptions "NotFoundException; BindingException"
+
+DELETE  /authors/delete/{id} "Elimina un autore se presente"     Exceptions "NotFoundException; BindingException"
+
+CASA_EDITRICE:
+
+
+GET /editors/search/all "Restituisce tutte case editrici presenti" (utilizzare il paging)  
+GET /editors/search/id  "Restituisce una specifica cassa editrice se presente"
+
+POST /editors/add     "Inserisce una nuova casa editrice"        Exceptions "DuplicateException; BindingException"
+
+PUT /editors/update   "Modifca una casa editrice se presente"    Exceptions "NotFoundException; BindingException"
+
+DELETE  /editors/delete/{id} "Elimina una casa editrice se presente"     Exceptions "NotFoundException; BindingException"
+
+
+
+SCAFFALE:
+
+
+GET /shelves/search/all "Restituisce tutti li scaffali presenti" (utilizzare il paging)  
+GET /shelves/search/id  "Restituisce uno scaffale se presente"
+
+POST /shelves/add     "Inserisce un nuovo scaffale"        Exceptions "DuplicateException; BindingException"
+
+PUT /shelves/update   "Modifca uno scaffale se presente"    Exceptions "NotFoundException; BindingException"
+
+DELETE  /shelves/delete/{id} "Elimina uno scaffale se presente"     Exceptions "NotFoundException; BindingException"
+
