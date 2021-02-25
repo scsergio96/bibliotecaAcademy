@@ -50,12 +50,6 @@ public class CasaEditriceController {
                                                                                 Metodi di lettura dei dati
                                                                                 */                                                
 
-    @ApiOperation(
-        value = "Ricerca di tutte le case editrici presenti",
-        notes = "Restituisce i dati usando il formato dati JSON",
-        response = CasaEditriceDTO.class,
-        produces = "application/json"
-    )
     @GetMapping(value = "/search/all")
     public ResponseEntity<List<CasaEditriceDTO>> getAll(@RequestParam(defaultValue = "0") Integer pageNo, 
                                                         @RequestParam(defaultValue = "10") Integer pageSize,
@@ -71,12 +65,7 @@ public class CasaEditriceController {
         return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @ApiOperation(
-        value = "Ricerca di una specifica casa editrice",
-        notes = "Restituisce i dati usando il formato dati JSON",
-        response = CasaEditriceDTO.class,
-        produces = "application/json"
-    )
+
     @GetMapping(value = "/search/id/{id}")
     public ResponseEntity<CasaEditriceDTO> getById(@PathVariable("id") Integer id) throws NotFoundException {
 
@@ -96,10 +85,7 @@ public class CasaEditriceController {
                                                                                 Metodi di modifica dei dati
                                                                                 */    
     
-    @ApiOperation(
-        value = "Aggiunta di una nuova casa editrice",
-        response = CasaEditriceDTO.class
-    )
+ 
     @PostMapping(value = "/add")
     public ResponseEntity<?> addNewElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult)
             throws BindingException, DuplicateException {
@@ -137,10 +123,7 @@ public class CasaEditriceController {
         return new ResponseEntity<>(responseNode, headers, HttpStatus.CREATED);
     }
 
-    @ApiOperation(
-        value = "Update di una casa editrice",
-        response = CasaEditriceDTO.class
-    )
+
     @PutMapping(value = "/update")
     public ResponseEntity<?> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
 
@@ -176,10 +159,7 @@ public class CasaEditriceController {
     }
 
 
-    @ApiOperation(
-        value = "Cancella di una casa editrice",
-        response = CasaEditriceDTO.class
-    )
+
     @DeleteMapping(value = "/delete/id/{id}")
     public ResponseEntity<?> deleteElemento(@PathVariable("id") Integer id){
 
