@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AutoreDTO {
 
-    private Integer idAutore;
+    private Integer id;
 
     private String nome;
 
@@ -18,5 +18,6 @@ public class AutoreDTO {
     private String dataMorte;
 
     private String nazionalita;
+
 
 }
