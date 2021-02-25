@@ -1,11 +1,18 @@
 package it.elearnpath.siav.libreria.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties
 public class LibroDTO {
 
-    private Integer isbn;
+    private Integer id;
+
+    private String isbn;
 
     private String titolo;
 
@@ -25,10 +32,10 @@ public class LibroDTO {
 
     private String lingua;
 
-    private Integer idAutore;
+    private List<Integer> idAutore;
 
-    private String nomeAutore;
+    private List<String> nomeAutore;
 
-    private String cognomeAutore;
+    private List<String> cognomeAutore;
 
 }
