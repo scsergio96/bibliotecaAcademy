@@ -54,3 +54,5 @@ PUT /shelves/update   "Modifca uno scaffale se presente"    Exceptions "NotFound
 
 DELETE  /shelves/delete/{id} "Elimina uno scaffale se presente"     Exceptions "NotFoundException; BindingException"
 
+
+
