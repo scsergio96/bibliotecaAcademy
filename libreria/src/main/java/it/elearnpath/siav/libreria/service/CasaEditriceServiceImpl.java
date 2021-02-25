@@ -9,16 +9,12 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import javax.persistence.Convert;
-import javax.persistence.Converter;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +107,25 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
 
         casaEditriceRepository.delete(casaEditriceOptional.get());
          
+    }
+
+    @Override
+    public CasaEditriceDTO searchByRagSociale(String ragSociale) {
+        CasaEditrice casaEditrice = casaEditriceRepository.findByRagioneSocialeLike(ragSociale);
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
+    }
+
+    @Override
+    public CasaEditriceDTO searchByPIva(String pIva) {
+
+        CasaEditrice casaEditrice = casaEditriceRepository.findBypIvaLike(pIva);
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
     }
     
 }
