@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpHeaders;
@@ -195,7 +192,11 @@ public class CasaEditriceController {
             throw new BindingException(errMsg);
         }
 
-        if(casaEditriceService.searchByPIva(casaEditriceDTO.getPIva()) != null){
+        CasaEditriceDTO casaEditriceDTO1 = casaEditriceService.searchByPIva(casaEditriceDTO.getPIva());
+
+        if(casaEditriceDTO1 != null){
+            System.out.println(casaEditriceDTO1.toString());
+
             throw new DuplicateException("Elemento già presente nel db");
         }
 
@@ -206,9 +207,9 @@ public class CasaEditriceController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Access-Control-Allow-Origin", "*");
 
-        casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.CREATED);
+        
     }
 
 

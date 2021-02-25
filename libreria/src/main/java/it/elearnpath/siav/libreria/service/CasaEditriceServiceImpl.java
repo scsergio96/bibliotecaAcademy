@@ -123,6 +123,10 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
 
         CasaEditrice casaEditrice = casaEditriceRepository.findBypIvaLike(pIva);
 
+        if(casaEditrice == null){
+            return null;
+        }
+
         CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
 
         return casaEditriceDTO;
