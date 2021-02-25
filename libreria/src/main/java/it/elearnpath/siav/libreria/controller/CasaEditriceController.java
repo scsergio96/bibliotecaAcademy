@@ -102,11 +102,8 @@ public class CasaEditriceController {
         CasaEditriceDTO casaEditriceDTO1 = casaEditriceService.searchById(casaEditriceDTO.getId());
 
 
-        if(casaEditriceDTO1 != null){
-            // elemento gia presente 
-            throw new DuplicateException("Casa Editrice gia presente con id pari a " + casaEditriceDTO.getId());
-        }
 
+        
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         HttpHeaders headers = new HttpHeaders();
