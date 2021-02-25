@@ -1,4 +1,4 @@
-package it.elearnpath.siav.libreria.services;
+package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +28,8 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public void delLibro(Libro libro) {
-        libroRepository.delete(libro);
+    public void delLibro(Integer id) {
+        libroRepository.deleteById(id);
     }
 
     @Override

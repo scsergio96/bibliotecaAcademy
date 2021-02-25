@@ -2,8 +2,6 @@ package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 
 import it.elearnpath.siav.libreria.dto.CasaEditriceDTO;
 

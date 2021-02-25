@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.HttpHeaders;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -26,7 +23,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import it.elearnpath.siav.libreria.dto.ScaffaleDTO;
 import it.elearnpath.siav.libreria.entity.Scaffale;
-import it.elearnpath.siav.libreria.repository.ScaffaleRepository;
 import it.elearnpath.siav.libreria.service.ScaffaleService;
 
 import org.springframework.web.bind.annotation.PostMapping;

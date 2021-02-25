@@ -1,4 +1,4 @@
-package it.elearnpath.siav.libreria.services;
+package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +18,6 @@ public interface LibroService {
 
     public void insLibro(Libro libro);
 
-    public void delLibro(Libro libro);
+    public void delLibro(Integer id);
 
 }
