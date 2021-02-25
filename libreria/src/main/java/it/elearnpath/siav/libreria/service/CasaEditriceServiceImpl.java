@@ -108,5 +108,24 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
         casaEditriceRepository.delete(casaEditriceOptional.get());
          
     }
+
+    @Override
+    public CasaEditriceDTO searchByRagSociale(String ragSociale) {
+        CasaEditrice casaEditrice = casaEditriceRepository.findByRagioneSocialeLike(ragSociale);
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
+    }
+
+    @Override
+    public CasaEditriceDTO searchByPIva(String pIva) {
+
+        CasaEditrice casaEditrice = casaEditriceRepository.findBypIvaLike(pIva);
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
+    }
     
 }
