@@ -2,6 +2,8 @@ package it.elearnpath.siav.libreria.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -99,7 +101,7 @@ public class CasaEditriceController {
         response = CasaEditriceDTO.class
     )
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addNewElement(@RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult)
+    public ResponseEntity<?> addNewElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult)
             throws BindingException, DuplicateException {
 
         if(bindingResult.hasErrors()){
@@ -140,7 +142,7 @@ public class CasaEditriceController {
         response = CasaEditriceDTO.class
     )
     @PutMapping(value = "/update")
-    public ResponseEntity<?> updateElement(@RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
+    public ResponseEntity<?> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
 
 
         if(bindingResult.hasErrors()){
