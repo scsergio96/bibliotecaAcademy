@@ -158,5 +158,57 @@ public class AutoreController {
         return new ResponseEntity<AutoreDTO>(headers, HttpStatus.OK);
     }
 
+    @ApiOperation(
+            value = "Elimina un autore dal db per id",
+            notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. " +
+                    "I dati sono restituiti in formato JSON",
+            response = AutoreDTO.class,
+            produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico")
+    })
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.OPTIONS)
+    public ResponseEntity<AutoreDTO> deleteAuthorByIdOptions(@PathVariable Integer id) throws NotFoundException {
+        autoreService.deleteAuthorById(id);
 
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<AutoreDTO>(headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(
+            value = "Elimina un autore dal db per id",
+            notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. " +
+                    "I dati sono restituiti in formato JSON",
+            response = AutoreDTO.class,
+            produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico")
+    })
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<AutoreDTO> deleteAuthorByIdGet(@PathVariable Integer id) throws NotFoundException {
+        autoreService.deleteAuthorById(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<AutoreDTO>(headers, HttpStatus.OK);
+    }
 }

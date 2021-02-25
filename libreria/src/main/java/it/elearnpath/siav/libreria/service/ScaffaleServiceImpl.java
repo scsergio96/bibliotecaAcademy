@@ -49,11 +49,11 @@ public class ScaffaleServiceImpl implements ScaffaleService {
 
    }
 
-  //@Override
-  //public void saveUpdateScafale(ScaffaleDTO scaffaleDTO){
-  //    Scaffale scaffale = modelMapper.map(scaffaleDTO, Scaffale.class);
-  //    scaffaleRepository.save(scaffale);
-  //}
+  @Override
+  public void saveUpdateScafale(ScaffaleDTO scaffaleDTO){
+      Scaffale scaffale = modelMapper.map(scaffaleDTO, Scaffale.class);
+      scaffaleRepository.save(scaffale);
+  }
 
    @Override
    public void deleteById(Integer id){
