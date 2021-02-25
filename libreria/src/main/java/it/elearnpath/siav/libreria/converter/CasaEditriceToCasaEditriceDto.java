@@ -17,13 +17,12 @@ public class CasaEditriceToCasaEditriceDto {
         }
 
         casaEditriceDTO.setId(casaEditrice.getId());
-        casaEditriceDTO.setRagioneSociale(casaEditrice.getRagioneSociale();
+        casaEditriceDTO.setRagioneSociale(casaEditrice.getRagioneSociale());
         casaEditriceDTO.setPIva(casaEditrice.getPIva());
         casaEditriceDTO.setIndirizzo(casaEditrice.getIndirizzo());
         
-        
-
-        return null;
+        return casaEditriceDTO;
     }
+
     
 }

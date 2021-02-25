@@ -1,10 +1,10 @@
 package it.elearnpath.siav.libreria.dto;
 
-import java.util.List;
-
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
@@ -14,6 +14,7 @@ import lombok.Data;
  */
 
  @Data
+ @JsonIgnoreProperties
 public class CasaEditriceDTO{
 
     @Id
@@ -30,6 +31,4 @@ public class CasaEditriceDTO{
     @NotNull
     @Size(max = 100)
     private String indirizzo;
-
-    List<LibroDTO> libri;
 }
