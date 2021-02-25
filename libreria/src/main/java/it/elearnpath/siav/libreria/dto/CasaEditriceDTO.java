@@ -1,5 +1,7 @@
 package it.elearnpath.siav.libreria.dto;
 
+import java.util.List;
+
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,4 +31,5 @@ public class CasaEditriceDTO{
     @Size(max = 100)
     private String indirizzo;
 
+    List<LibroDTO> libri;
 }
