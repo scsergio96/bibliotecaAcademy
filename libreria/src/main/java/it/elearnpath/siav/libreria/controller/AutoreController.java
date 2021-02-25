@@ -1,12 +1,16 @@
 package it.elearnpath.siav.libreria.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.elearnpath.siav.libreria.dto.AutoreDTO;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
 import it.elearnpath.siav.libreria.service.AutoreService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +39,18 @@ public class AutoreController {
     @GetMapping("/search/all/{page}")
     public ResponseEntity<List<AutoreDTO>> getAllAuthorsPaging(@PathVariable("page") int page) {
         List<AutoreDTO> autori = autoreService.findAllPaging(page);
-        return new ResponseEntity<List<AutoreDTO>>(autori, HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<List<AutoreDTO>>(autori, headers, HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -50,7 +65,18 @@ public class AutoreController {
     @GetMapping("/search/{id}")
     public ResponseEntity<AutoreDTO> getAuthorById(@PathVariable("id") Integer id) throws NotFoundException {
         AutoreDTO autoreDTO = autoreService.getAuthorById(id);
-        return new ResponseEntity<AutoreDTO>(autoreDTO, HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<AutoreDTO>(autoreDTO, headers, HttpStatus.OK);
     }
 
     @ApiOperation(
@@ -65,7 +91,18 @@ public class AutoreController {
     @PostMapping("/add")
     public ResponseEntity<AutoreDTO> insertAuthor(@RequestBody AutoreDTO autoreDTO) {
         autoreService.saveAuthor(autoreDTO);
-        return new ResponseEntity<AutoreDTO>(HttpStatus.CREATED);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.CREATED.toString());
+
+        return new ResponseEntity<AutoreDTO>(headers, HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -80,11 +117,22 @@ public class AutoreController {
     @PutMapping("/update")
     public ResponseEntity<AutoreDTO> updateAuthorById(@RequestBody AutoreDTO autoreDTO) throws Exception {
         autoreService.updateAuthor(autoreDTO);
-        return new ResponseEntity<AutoreDTO>(HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<AutoreDTO>(headers, HttpStatus.OK);
     }
 
     @ApiOperation(
-            value = "Ricerca tutti gli autori presenti nel DB",
+            value = "Elimina un autore dal db per id",
             notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. " +
                     "I dati sono restituiti in formato JSON",
             response = AutoreDTO.class,
@@ -96,7 +144,18 @@ public class AutoreController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<AutoreDTO> deleteAuthorById(@PathVariable Integer id) throws NotFoundException {
         autoreService.deleteAuthorById(id);
-        return new ResponseEntity<AutoreDTO>(HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        responseNode.put("code", HttpStatus.OK.toString());
+
+        return new ResponseEntity<AutoreDTO>(headers, HttpStatus.OK);
     }
 
 
