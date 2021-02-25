@@ -13,21 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.HttpHeaders;
 
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.List;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import it.elearnpath.siav.libreria.dto.ScaffaleDTO;
 import it.elearnpath.siav.libreria.entity.Scaffale;
-import it.elearnpath.siav.libreria.repository.ScaffaleRepository;
+import it.elearnpath.siav.libreria.exception.DuplicateException;
+
 import it.elearnpath.siav.libreria.service.ScaffaleService;
+
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -65,7 +66,7 @@ public class ScaffaleController {
     }
 
     @PostMapping("/inserisco")
-    public ResponseEntity<?> inseriscoScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO){
+    public ResponseEntity<?> inseriscoScaffale(@RequestBody  ScaffaleDTO scaffaleDTO) throws DuplicateException {
 
        // scaffaleService.save(scaffale);
 
@@ -73,11 +74,17 @@ public class ScaffaleController {
         ObjectMapper mapper = new ObjectMapper();
         
         headers.setContentType(MediaType.APPLICATION_JSON);
-        int i = scaffaleDTO.getId();
+        Integer i = scaffaleDTO.getId();
+        System.out.println(i);
         
-        if(scaffaleService.findById(i).equals(i)){
-            
-        }else{
+      //  if(scaffaleService.findById(i) == null){
+      //      scaffaleService.save(scaffaleDTO);
+      //  }else{
+      //      System.out.println("Esiste gia");
+      //      throw new DuplicateException();
+      //  }
+
+        if(scaffaleService.findById(i) == null){
             scaffaleService.save(scaffaleDTO);
         }
         
@@ -100,10 +107,10 @@ public class ScaffaleController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         
         int i = scaffaleDTO.getId();
-        if(scaffaleService.findById(i).equals(i)){
+
+        if(scaffaleService.findById(i) != null){
             
-        }else{
-            scaffaleService.saveUpdateScafale(scaffaleDTO);
+           scaffaleService.save(scaffaleDTO);
         }
 
         

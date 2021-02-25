@@ -2,7 +2,7 @@ package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 
-import javax.validation.Valid;
+
 
 import it.elearnpath.siav.libreria.dto.ScaffaleDTO;
 import it.elearnpath.siav.libreria.entity.Scaffale;
