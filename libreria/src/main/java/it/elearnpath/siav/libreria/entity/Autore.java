@@ -1,11 +1,7 @@
 package it.elearnpath.siav.libreria.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -2,7 +2,6 @@ package it.elearnpath.siav.libreria.service;
 
 import it.elearnpath.siav.libreria.dto.AutoreDTO;
 import it.elearnpath.siav.libreria.entity.Autore;
-import it.elearnpath.siav.libreria.exception.ErrorResponse;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
 import org.springframework.data.domain.PageRequest;
@@ -119,7 +118,17 @@ public class AutoreService {
         autoreRepository.save(autore);
     }
 
-    // TODO finire questo questo too
+    /**
+     * PUT /authors/update
+     * Verifico la presenza dell'autore nel DB per id.
+     * Verica parametro per parametro di AutoreDTO e Autore.
+     * Copio il valore del parametro di Autore DTO in Autore solo se il primo non è null e
+     * differiscono tra loro
+     *
+     * @param autoreDTO
+     * @throws Exception se l'id dell'autore non è valido
+     * @throws NotFoundException quando l'autore da modificare non è presente nel database
+     */
     public void updateAuthor(AutoreDTO autoreDTO) throws Exception {
         Integer id = autoreDTO.getId();
         if (id == null || id < 0) {
@@ -130,22 +139,46 @@ public class AutoreService {
 
         if (autoreOptional.isPresent()) {
             Autore autore = autoreOptional.get();
-            if (autore.getNome() != null && autore.getNome() != autoreDTO.getNome()) {
+            if (autoreDTO.getNome() != null && !autore.getNome().equals(autoreDTO.getNome())) {
                 autore.setNome(autoreDTO.getNome());
-            } else if (autoreDTO.getCognome() != null && autore.getCognome() != autoreDTO.getCognome()) {
+            }
+            if (autoreDTO.getCognome() != null && !autore.getCognome().equals(autoreDTO.getCognome())) {
                 autore.setCognome(autoreDTO.getCognome());
-            } else if (autoreDTO.getNazionalita() != null && autore.getNazionalita() != autoreDTO.getNazionalita()) {
+            }
+            if (autoreDTO.getNazionalita() != null && !autore.getNazionalita().equals(autoreDTO.getNazionalita())) {
                 autore.setNazionalita(autoreDTO.getNazionalita());
-            } else if (autoreDTO.getBiografia() != null && autore.getBiografia() != autoreDTO.getBiografia()) {
+            }
+            if (autoreDTO.getBiografia() != null && !autore.getBiografia().equals(autoreDTO.getBiografia())) {
                 autore.setBiografia(autoreDTO.getBiografia());
-            } else if (autoreDTO.getDataNascita() != null && dateConverter(autore.getDataNascita()) != autoreDTO.getDataNascita()) {
+            }
+            if (autoreDTO.getDataNascita() != null && !dateConverter(autore.getDataNascita()).equals(autoreDTO.getDataNascita())) {
                 autore.setDataNascita(autoreDTO.getDataNascita());
-            } else if (autoreDTO.getDataMorte() != null && dateConverter(autore.getDataMorte()) != autoreDTO.getDataMorte()) {
+            }
+            if (autoreDTO.getDataMorte() != null && !dateConverter(autore.getDataMorte()).equals(autoreDTO.getDataMorte())) {
                 autore.setDataMorte(autoreDTO.getDataMorte());
             }
+            autoreRepository.save(autore);
         } else {
             throw new NotFoundException();
         }
 
+    }
+
+    /**
+     * DELETE /authors/delete/:id
+     * Verifa presenza autore nel DB tramite id
+     * Elimo autore se presente.
+     *
+     * @param id
+     * @throws NotFoundException se l'autore non è presente nel DB
+     */
+    public void deleteAuthorById(Integer id) throws NotFoundException {
+        Optional<Autore> autoreOptional = autoreRepository.findById(id);
+
+        if (autoreOptional.isPresent()) {
+            autoreRepository.delete(autoreOptional.get());
+        } else {
+            throw new NotFoundException();
+        }
     }
 }
