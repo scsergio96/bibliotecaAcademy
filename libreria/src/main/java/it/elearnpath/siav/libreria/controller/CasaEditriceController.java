@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponses;
 import it.elearnpath.siav.libreria.dto.CasaEditriceDTO;
 import it.elearnpath.siav.libreria.exception.BindingException;
 import it.elearnpath.siav.libreria.exception.DuplicateException;
@@ -80,6 +78,43 @@ public class CasaEditriceController {
 
         return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
     }
+
+
+    @GetMapping(value = "/search/ragioneSoc/{ragSoc}")
+    public ResponseEntity<CasaEditriceDTO> getByRagSocial(@PathVariable("ragSoc") String ragSoc)
+            throws Exception {
+
+        if(ragSoc.length() == 0){
+            throw new Exception("fornire una ragione sociale");
+        }
+
+        CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchByRagSociale(ragSoc + "%");
+
+        if(casaEditriceDTO == null){
+            throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa ragione sociale " + ragSoc);
+        }
+
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
+
+    }
+
+
+    @GetMapping(value = "/search/piva/{pIva}")
+    public ResponseEntity<CasaEditriceDTO> getByPIva(@PathVariable("pIva") String pIva) throws Exception {
+
+        if(pIva.length() != 11){
+            throw new Exception("la lunghezza della partita iva deve essere pari a 11");
+        }
+
+        CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchByPIva(pIva);
+
+        if(casaEditriceDTO == null){
+            throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa partita iva" + pIva);
+        }
+
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
+
+    }
     
     
                                                                                 /*
@@ -99,12 +134,9 @@ public class CasaEditriceController {
             throw new BindingException(errMsg);
         }
 
-        CasaEditriceDTO casaEditriceDTO1 = casaEditriceService.searchById(casaEditriceDTO.getId());
 
-
-        if(casaEditriceDTO1 != null){
-            // elemento gia presente 
-            throw new DuplicateException("Casa Editrice gia presente con id pari a " + casaEditriceDTO.getId());
+        if(casaEditriceDTO != casaEditriceService.searchByPIva(casaEditriceDTO.getPIva())){
+            throw new DuplicateException("casa editrice già presente");
         }
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);

@@ -21,9 +21,8 @@ public class CasaEditriceToCasaEditriceDto {
         casaEditriceDTO.setPIva(casaEditrice.getPIva());
         casaEditriceDTO.setIndirizzo(casaEditrice.getIndirizzo());
         
-        
-
-        return null;
+        return casaEditriceDTO;
     }
+
     
 }
