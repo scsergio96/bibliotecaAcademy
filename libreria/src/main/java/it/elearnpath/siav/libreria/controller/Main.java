@@ -1,17 +1,17 @@
-package it.elearnpath.siav.libreria.controller;
+// package it.elearnpath.siav.libreria.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
+// import java.text.SimpleDateFormat;
+// import java.util.Date;
+// import java.util.Optional;
 
-public class Main {
+// public class Main {
 
-    public static void main(String[] args) {
-        String prova = "ciao";
+//     public static void main(String[] args) {
+//         String prova = "ciao";
 
-        Optional<String> s = Optional.of(prova).map(String::toUpperCase);
+//         Optional<String> s = Optional.of(prova).map(String::toUpperCase);
 
-        System.out.println();
-    }
+//         System.out.println();
+//     }
 
-}
+// }

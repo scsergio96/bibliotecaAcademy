@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.elearnpath.siav.libreria.converter.LibroDtoToLibro;
 import it.elearnpath.siav.libreria.converter.LibroToLibroDto;
 import it.elearnpath.siav.libreria.dto.LibroDTO;
 import it.elearnpath.siav.libreria.entity.Libro;
@@ -28,6 +30,9 @@ public class LibroController {
 
     @Autowired
     private LibroToLibroDto libroToLibroDto;
+
+    @Autowired
+    private LibroDtoToLibro libroDtoToLibro;
 
     /**
      * @param id da cercare
@@ -66,6 +71,13 @@ public class LibroController {
         return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
     }
+
+    @PostMapping(value = "/add")
+    public ResponseEntity<LibroDTO> insertLibro(@RequestBody LibroDTO libroDTO) {
+        Libro libro = libroDtoToLibro.convert(libroDTO);
+        libroService.insLibro(libro);
+        return new ResponseEntity<LibroDTO>(HttpStatus.OK);
+    } 
 
 
 

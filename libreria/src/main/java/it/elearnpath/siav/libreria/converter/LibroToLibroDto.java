@@ -15,7 +15,7 @@ public class LibroToLibroDto {
     public LibroDTO convert(Libro libro) {
         final LibroDTO libroDTO = new LibroDTO();
 
-        libroDTO.setId(libro.getId());
+        // libroDTO.setId(libro.getId());
         libroDTO.setIsbn(libro.getIsbn());
         libroDTO.setTitolo(libro.getTitolo());
         libroDTO.setPagine(libro.getPagine());
