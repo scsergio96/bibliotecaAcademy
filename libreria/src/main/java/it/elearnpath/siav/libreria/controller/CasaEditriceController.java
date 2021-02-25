@@ -139,7 +139,6 @@ public class CasaEditriceController {
             throw new DuplicateException("casa editrice già presente");
         }
 
-
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         HttpHeaders headers = new HttpHeaders();
