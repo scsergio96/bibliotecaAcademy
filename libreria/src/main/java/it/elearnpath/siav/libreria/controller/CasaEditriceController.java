@@ -25,6 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 import it.elearnpath.siav.libreria.dto.CasaEditriceDTO;
 import it.elearnpath.siav.libreria.exception.BindingException;
 import it.elearnpath.siav.libreria.exception.DuplicateException;
@@ -46,9 +50,16 @@ public class CasaEditriceController {
     }
 
                                                                                 /*
-                                                                                Metodi di lettura dei dati
+                                                                                Metodi di LETTURA dei dati
                                                                                 */                                                
-
+    @ApiOperation(
+        value = "Elenco di tutte le case editrici", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 200, message = "Tutto bene"),
+                          @ApiResponse(code = 400, message = "Errore generico") })
     @GetMapping(value = "/search/all")
     public ResponseEntity<List<CasaEditriceDTO>> getAll(@RequestParam(defaultValue = "0") Integer pageNo, 
                                                         @RequestParam(defaultValue = "10") Integer pageSize,
@@ -61,11 +72,24 @@ public class CasaEditriceController {
             return new ResponseEntity<List<CasaEditriceDTO>>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, new HttpHeaders(), HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, headers, HttpStatus.OK);
     }
 
 
-    @GetMapping(value = "/search/id/{id}")
+
+    @ApiOperation(
+        value = "Ricerca casa editrice per id", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 200, message = "Tutto bene"),
+                          @ApiResponse(code = 404, message = "Elemento non trovato") })
+    @GetMapping(value = "/search/{id}")
     public ResponseEntity<CasaEditriceDTO> getById(@PathVariable("id") Integer id) throws NotFoundException {
 
         CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchById(id);
@@ -76,10 +100,23 @@ public class CasaEditriceController {
             throw new NotFoundException("non è presente una casa editrice con id pari a " + id);
         }
 
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
     }
 
 
+
+    @ApiOperation(
+        value = "Ricerca casa editrice per ragione sociale", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 200, message = "Tutto bene"),
+                          @ApiResponse(code = 400, message = "Errore generico") })
     @GetMapping(value = "/search/ragioneSoc/{ragSoc}")
     public ResponseEntity<CasaEditriceDTO> getByRagSocial(@PathVariable("ragSoc") String ragSoc)
             throws Exception {
@@ -94,11 +131,24 @@ public class CasaEditriceController {
             throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa ragione sociale " + ragSoc);
         }
 
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
 
     }
 
 
+
+    @ApiOperation(
+        value = "Ricerca casa editrice per partita iva", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 200, message = "Tutto bene"),
+                          @ApiResponse(code = 400, message = "Errore generico") })
     @GetMapping(value = "/search/piva/{pIva}")
     public ResponseEntity<CasaEditriceDTO> getByPIva(@PathVariable("pIva") String pIva) throws Exception {
 
@@ -112,18 +162,29 @@ public class CasaEditriceController {
             throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa partita iva" + pIva);
         }
 
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
 
     }
     
     
                                                                                 /*
-                                                                                Metodi di modifica dei dati
+                                                                                Metodi di MODIFICA dei dati
                                                                                 */    
     
- 
+    @ApiOperation(
+        value = "Inserimento di una casa editrice se non presente nel DB", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 201, message = "Elemento inserito correttamente"),
+                          @ApiResponse(code = 406, message = "Elemento duplicato") })
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addNewElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult)
+    public ResponseEntity<CasaEditriceDTO> addNewElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult)
             throws BindingException, DuplicateException {
 
         if(bindingResult.hasErrors()){
@@ -134,31 +195,34 @@ public class CasaEditriceController {
             throw new BindingException(errMsg);
         }
 
-
-        if(casaEditriceDTO != casaEditriceService.searchByPIva(casaEditriceDTO.getPIva())){
-            throw new DuplicateException("casa editrice già presente");
+        if(casaEditriceService.searchByPIva(casaEditriceDTO.getPIva()) != null){
+            throw new DuplicateException("Elemento già presente nel db");
         }
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        ObjectMapper mapper = new ObjectMapper();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
-
-        ObjectNode responseNode = mapper.createObjectNode();
+        headers.add("Access-Control-Allow-Origin", "*");
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
-        responseNode.put("code", HttpStatus.OK.toString());
-        responseNode.put("message", "Inserimento Articolo " + casaEditriceDTO.getId() + " Eseguita Con Successo");
-
-        return new ResponseEntity<>(responseNode, headers, HttpStatus.CREATED);
+        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.CREATED);
     }
 
 
+
+    @ApiOperation(
+        value = "Aggiornamento di una casa editrice se presente nel DB", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 201, message = "Elemento aggiornato correttamente"),
+                          @ApiResponse(code = 404, message = "Elemento non presente") })
     @PutMapping(value = "/update")
-    public ResponseEntity<?> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
+    public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
 
 
         if(bindingResult.hasErrors()){
@@ -178,38 +242,43 @@ public class CasaEditriceController {
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        ObjectMapper mapper = new ObjectMapper();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
 
-        ObjectNode responseNode = mapper.createObjectNode();
-
-
-        responseNode.put("code", HttpStatus.OK.toString());
-        responseNode.put("message", "Inserimento Articolo " + casaEditriceDTO.getId() + " Eseguita Con Successo");
-
-        return new ResponseEntity<>(responseNode, headers, HttpStatus.CREATED);
+        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.CREATED);
     }
 
 
 
-    @DeleteMapping(value = "/delete/id/{id}")
-    public ResponseEntity<?> deleteElemento(@PathVariable("id") Integer id){
+    @ApiOperation(
+        value = "Cancellazione di una casa editrice se presente nel DB", 
+        notes = "I dati sono restituiti in formato JSON", 
+        response = CasaEditriceDTO.class, 
+        produces = "application/json")
+    @ApiResponses(value = 
+                        { @ApiResponse(code = 200, message = "Elemento cancellatto correttamente"),
+                          @ApiResponse(code = 404, message = "Elemento non presente") })
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<CasaEditriceDTO> deleteElemento(@PathVariable("id") Integer id) throws NotFoundException {
+
+        CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchById(id);
+
+        if(casaEditriceDTO == null){
+
+            String errMsg = String.format("Casa editrice %s non presente !", id);
+
+            throw new NotFoundException(errMsg);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Access-Control-Allow-Origin", "*");
 
         casaEditriceService.deleteCasaEdi(id);
 
-
-        HttpHeaders headers = new HttpHeaders();
-        ObjectMapper mapper = new ObjectMapper();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        ObjectNode responseNode = mapper.createObjectNode();
-
-        responseNode.put("code", HttpStatus.OK.toString());
-        responseNode.put("message", "Eliminazione Articolo " + id + " Eseguita Con Successo");
-
-        return new ResponseEntity<>(responseNode, headers, HttpStatus.OK);
+        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.OK);
     
     }
 }
