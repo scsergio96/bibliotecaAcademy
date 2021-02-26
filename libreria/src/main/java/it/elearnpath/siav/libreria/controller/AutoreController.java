@@ -41,9 +41,10 @@ public class AutoreController {
             @ApiResponse(code = 400, message = "Errore generico (comprende errori di binding)")
     })
     @GetMapping("/search/all/{page}")
-    public ResponseEntity<List<AutoreDTO>> getAllAuthorsPaging(@PathVariable("page") int page) {
+    public ResponseEntity<List<AutoreDTO>> getAllAuthorsPaging(@PathVariable("page") Integer page,
+                                                               @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        List<AutoreDTO> autori = autoreService.findAllPaging(page);
+        List<AutoreDTO> autori = autoreService.findAllPaging(page, pageSize);
 
         return new ResponseEntity<List<AutoreDTO>>(autori, HttpStatus.OK);
     }

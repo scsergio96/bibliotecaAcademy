@@ -2,7 +2,10 @@ package it.elearnpath.siav.libreria.converter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import it.elearnpath.siav.libreria.repository.AutoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import it.elearnpath.siav.libreria.dto.LibroDTO;
@@ -13,6 +16,9 @@ import it.elearnpath.siav.libreria.entity.Scaffale;
 
 @Component
 public class LibroDtoToLibro {
+
+    @Autowired
+    AutoreRepository autoreRepository;
 
     public Libro convert(LibroDTO libroDTO) {
 

@@ -35,8 +35,8 @@ public class AutoreServiceImpl implements AutoreService {
      * @return List<AuthorDTO>
      */
     @Override
-    public List<AutoreDTO> findAllPaging(int page) {
-        Pageable pageNumber = PageRequest.of(page, 10);
+    public List<AutoreDTO> findAllPaging(Integer page, Integer pageSize) {
+        Pageable pageNumber = PageRequest.of(page, pageSize);
         List<Autore> autori = autoreRepository.findByOrderByCognomeAscNomeAsc(pageNumber);
         List<AutoreDTO> autoriDTO = new ArrayList<>();
 
