@@ -61,10 +61,4 @@ public class ScaffaleServiceImpl implements ScaffaleService {
 
    }
 
-   @Override
-   public Scaffale saveUpdateScafale(ScaffaleDTO scaffale) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
 }
