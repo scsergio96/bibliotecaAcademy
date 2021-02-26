@@ -20,4 +20,6 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
 
     public Optional<Libro> findByIsbnLike(String isbn);
 
+    public List<Libro> findAllByTitoloContainingIgnoreCase(String titolo);
+
 }

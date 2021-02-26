@@ -3,6 +3,8 @@ package it.elearnpath.siav.libreria.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +44,26 @@ public class LibroController {
     @Autowired
     private LibroDtoToLibro libroDtoToLibro;
 
+    @ApiOperation(value = "Ricerca tutti i libri presenti nel DB", notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. "
+            + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/search/page/{page}")
+    public ResponseEntity<List<LibroDTO>> searchAll(@PathVariable("page") @Valid Integer page)
+            throws NotFoundException {
+
+        if (libroService.getLibri(PageRequest.of(page, 10)).isEmpty()) {
+            String errMsg = String.format("La pagina %s non esiste!", page);
+            throw new NotFoundException(errMsg);
+        }
+
+        List<LibroDTO> libri = (libroService.getLibri(PageRequest.of(page, 10))).stream()
+                .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+        return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
+
+    }
+
     @ApiOperation(value = "Ricerca libro per id", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
@@ -69,7 +91,22 @@ public class LibroController {
 
     }
 
-    @ApiOperation(value = "Ricerca libro per id", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiOperation(value = "Ricerca tutti i libri che contengono la stringa titolo inserita nel path", notes = "Case insensitive"
+            + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/search/titolo/{titolo}")
+    public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
+            throws NotFoundException {
+
+        List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
+                .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+        return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "Ricerca libro per id, isbn o titolo", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @GetMapping(value = "/search2")
@@ -86,30 +123,20 @@ public class LibroController {
 
     }
 
-    @ApiOperation(value = "Ricerca tutti i libri presenti nel DB", notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. "
-            + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiOperation(value = "Restituisce una lista di generi", response = List.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/search/page/{page}")
-    public ResponseEntity<List<LibroDTO>> searchAll(@PathVariable("page") Integer page) throws NotFoundException {
-
-        if (libroService.getLibri(PageRequest.of(page, 10)).isEmpty()) {
-            String errMsg = String.format("La pagina %s non esiste!", page);
-            throw new NotFoundException(errMsg);
-        }
-
-        List<LibroDTO> libri = (libroService.getLibri(PageRequest.of(page, 10))).stream()
-                .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
-
-        return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
-
+    @GetMapping(value = "/genres")
+    public ResponseEntity<List<String>> showGenres() {
+        List<String> genres = libroService.getGenres();
+        return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Inserisce un libro se non è presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 201, message = "Libro inserito nel DB"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @PostMapping(value = "/add")
-    public ResponseEntity<LibroDTO> insertLibro(@RequestBody LibroDTO libroDTO) {
+    public ResponseEntity<LibroDTO> insertLibro(@RequestBody @Valid LibroDTO libroDTO) {
         Libro libro = libroDtoToLibro.convert(libroDTO);
         libroService.insLibro(libro);
 
@@ -146,15 +173,6 @@ public class LibroController {
         libroService.delLibro(id);
 
         return new ResponseEntity<LibroDTO>(HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Restituisce una lista di generi", response = List.class, produces = "application/json")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
-            @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/genres")
-    public ResponseEntity<List<String>> showGenres() {
-        List<String> genres = libroService.getGenres();
-        return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
     }
 
 }

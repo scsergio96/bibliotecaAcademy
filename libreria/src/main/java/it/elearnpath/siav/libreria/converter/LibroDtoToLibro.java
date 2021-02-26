@@ -14,7 +14,7 @@ import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.entity.Scaffale;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
 import it.elearnpath.siav.libreria.repository.CasaEditriceRepository;
-import it.elearnpath.siav.libreria.repository.ScaffaleRepository;
+import it.elearnpath.siav.libreria.service.ScaffaleService;
 
 @Component
 public class LibroDtoToLibro {
@@ -23,20 +23,21 @@ public class LibroDtoToLibro {
     CasaEditriceRepository casaEditriceRepository;
 
     @Autowired
-    ScaffaleRepository scaffaleRepository;
+    ScaffaleService scaffaleService;
 
     @Autowired
     AutoreRepository autoreRepository;
 
     public Libro convert(LibroDTO libroDTO) {
 
-        List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
-        .collect(Collectors.toList());
-
-
         if (libroDTO == null) {
             return null;
         }
+
+        List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
+        .collect(Collectors.toList());
+
+        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(),libroDTO.getRipiano());
 
         final Libro libro = new Libro();
 
@@ -50,7 +51,7 @@ public class LibroDtoToLibro {
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
         libro.setGenere(libroDTO.getGenere());
-        libro.setPosizioneBiblioteca(scaffaleRepository.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano()).get());
+        libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
 
         return libro;
@@ -67,6 +68,8 @@ public class LibroDtoToLibro {
         List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
         .collect(Collectors.toList());
 
+        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(),libroDTO.getRipiano());
+
         final Libro libro = new Libro();
 
         libro.setId(libroDTO.getId());
@@ -79,7 +82,7 @@ public class LibroDtoToLibro {
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
         libro.setGenere(libroDTO.getGenere());
-        libro.setPosizioneBiblioteca(scaffaleRepository.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano()).get());
+        libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
 
         return libro;

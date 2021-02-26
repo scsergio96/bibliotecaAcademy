@@ -26,4 +26,6 @@ public interface LibroService {
 
     public Optional<Libro> getLibroByIsbn(String isbn);
 
+    public List<Libro> getLibriByTitolo (String titolo);
+
 }

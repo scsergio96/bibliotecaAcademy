@@ -15,6 +15,6 @@ public interface ScaffaleService {
 
    void deleteById(Integer id);
 
-   void findByNumeroAndRipiano(Integer numero, Integer posizione);
+   Scaffale findByNumeroAndRipiano(Integer numero, Integer posizione);
 
 }

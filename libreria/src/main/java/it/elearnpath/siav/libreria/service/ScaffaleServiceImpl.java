@@ -54,18 +54,20 @@ public class ScaffaleServiceImpl implements ScaffaleService {
    }
 
    @Override
-   public void findByNumeroAndRipiano(Integer numero, Integer posizione) {
+   public Scaffale findByNumeroAndRipiano(Integer numero, Integer posizione) {
       Scaffale scaffale = scaffaleRepository.findByNumeroAndRipiano(numero, posizione);
 
-      if (!scaffale.getNumero().equals(numero)) {
-
+      if (scaffale == null) {
          Scaffale scaffaleCreo = new Scaffale();
 
          scaffaleCreo.setNumero(numero);
          scaffaleCreo.setRipiano(posizione);
 
          scaffaleRepository.save(scaffaleCreo);
+         return scaffaleCreo;
       }
+
+      return scaffale;
 
    }
 
