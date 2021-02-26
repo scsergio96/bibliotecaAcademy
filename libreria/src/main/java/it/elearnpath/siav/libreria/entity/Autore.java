@@ -36,7 +36,7 @@ public class Autore {
     private Date dataMorte;
 
     @NotNull
-    @Column(name = "nazionalità")
+    @Column(name = "nazionalita")
     private String nazionalita;
 
     @NotNull
