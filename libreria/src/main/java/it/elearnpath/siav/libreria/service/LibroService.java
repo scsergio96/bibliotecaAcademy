@@ -20,4 +20,10 @@ public interface LibroService {
 
     public void delLibro(Integer id);
 
+    public List<String> getGenres();
+
+    public List<Libro> getLibroByIdOrIsbnOrTitolo(Integer id, String isbn, String titolo);
+
+    public Optional<Libro> getLibroByIsbn(String isbn);
+
 }
