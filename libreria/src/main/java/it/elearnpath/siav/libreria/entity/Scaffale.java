@@ -26,7 +26,7 @@ public class Scaffale {
 
     @NotNull
     @Min(value = 1)
-    @Max(value = 5)
+    @Max(value = 5, message = "Max.Scaffale.ripiano.Validation")
     private Integer ripiano;
 
     @OneToMany(mappedBy = "posizioneBiblioteca", cascade = CascadeType.ALL)
