@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -70,11 +69,7 @@ public class CasaEditriceController {
             return new ResponseEntity<List<CasaEditriceDTO>>(HttpStatus.NO_CONTENT);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, headers, HttpStatus.OK);
+        return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, HttpStatus.OK);
     }
 
 
@@ -94,7 +89,6 @@ public class CasaEditriceController {
 
         if(casaEditriceDTO == null){
             // elemento non presente nel db
-
             throw new NotFoundException("non è presente una casa editrice con id pari a " + id);
         }
 
@@ -126,7 +120,7 @@ public class CasaEditriceController {
         }
 
         return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
-
+        
     }
 
 
