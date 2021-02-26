@@ -26,6 +26,7 @@ import io.swagger.annotations.ApiResponse;
 
 import it.elearnpath.siav.libreria.converter.LibroDtoToLibro;
 import it.elearnpath.siav.libreria.converter.LibroToLibroDto;
+import it.elearnpath.siav.libreria.dto.CountGenresDTO;
 import it.elearnpath.siav.libreria.dto.LibroDTO;
 import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
@@ -130,6 +131,18 @@ public class LibroController {
     public ResponseEntity<List<String>> showGenres() {
         List<String> genres = libroService.getGenres();
         return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "Restituisce una lista di generi e del numero di libri di tale genere", response = List.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/genres/num")
+    public ResponseEntity<List<CountGenresDTO>> numGenres() {
+
+        List<CountGenresDTO> genres = libroService.getNumGenre();
+
+        return new ResponseEntity<List<CountGenresDTO>>(genres, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Inserisce un libro se non è presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request", response = LibroDTO.class, produces = "application/json")

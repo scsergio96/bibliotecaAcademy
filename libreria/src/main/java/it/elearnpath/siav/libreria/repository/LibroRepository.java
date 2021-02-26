@@ -18,6 +18,12 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     @Query(value = "SELECT genere FROM biblioteca.libro group by genere", nativeQuery = true)
     public List<String> getAllGenres();
 
+    // @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
+    // public List<String> getNumForGenres();
+
+    @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
+    public List<String> getNumForGenres();
+
     public Optional<Libro> findByIsbnLike(String isbn);
 
     public List<Libro> findAllByTitoloContainingIgnoreCase(String titolo);
