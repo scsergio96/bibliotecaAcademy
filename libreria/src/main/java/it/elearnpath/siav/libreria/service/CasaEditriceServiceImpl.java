@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +84,54 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
         return casaEditriceDTO;
     }
 
+
+    @Override
+    public CasaEditriceDTO searchByRagSociale(String ragSociale) {
+        CasaEditrice casaEditrice = casaEditriceRepository.findByRagioneSocialeLike(ragSociale);
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
+    }
+
+    @Override
+    public CasaEditriceDTO searchByPIva(String pIva) {
+
+        CasaEditrice casaEditrice = casaEditriceRepository.findBypIvaLike(pIva);
+
+        if(casaEditrice == null){
+            return null;
+        }
+
+        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
+
+        return casaEditriceDTO;
+    }
+
+
+    @Override
+    public List<CasaEditriceDTO> searchByIdOrRagSocialeOrPiva(Integer id, String ragSoc, String pIva) {
+
+        CasaEditrice casaEditriceExampler = new CasaEditrice();
+        casaEditriceExampler.setId(id);
+        casaEditriceExampler.setRagioneSociale(ragSoc);
+        casaEditriceExampler.setPIva(pIva);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                                                .withIgnoreCase("ragioneSociale");
+
+
+        List<CasaEditrice> casaEditriceList = casaEditriceRepository.findAll(Example.of(casaEditriceExampler, matcher));
+        
+        
+        List<CasaEditriceDTO> casaEditriceDTOList =  casaEditriceList.stream()
+                                                                .map(casaEditrice -> modelMapper.map(casaEditrice, CasaEditriceDTO.class))
+                                                                .collect(Collectors.toList());
+
+        return casaEditriceDTOList;
+    }
+    
+
     @Override
     public void addNewCasaEdi(CasaEditriceDTO casaEditrice) {
         
@@ -108,28 +158,5 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
         casaEditriceRepository.delete(casaEditriceOptional.get());
          
     }
-
-    @Override
-    public CasaEditriceDTO searchByRagSociale(String ragSociale) {
-        CasaEditrice casaEditrice = casaEditriceRepository.findByRagioneSocialeLike(ragSociale);
-
-        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
-
-        return casaEditriceDTO;
-    }
-
-    @Override
-    public CasaEditriceDTO searchByPIva(String pIva) {
-
-        CasaEditrice casaEditrice = casaEditriceRepository.findBypIvaLike(pIva);
-
-        if(casaEditrice == null){
-            return null;
-        }
-
-        CasaEditriceDTO casaEditriceDTO = modelMapper.map(casaEditrice, CasaEditriceDTO.class);
-
-        return casaEditriceDTO;
-    }
-    
+  
 }
