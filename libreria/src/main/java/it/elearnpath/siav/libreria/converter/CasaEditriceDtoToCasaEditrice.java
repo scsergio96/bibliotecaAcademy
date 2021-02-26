@@ -16,7 +16,6 @@ public class CasaEditriceDtoToCasaEditrice {
 
         final CasaEditrice casaEditrice = new CasaEditrice();
 
-        casaEditrice.setId(0);
         casaEditrice.setIndirizzo(casaEditriceDTO.getIndirizzo());
         casaEditrice.setRagioneSociale(casaEditriceDTO.getRagioneSociale());
         casaEditrice.setPIva(casaEditriceDTO.getPIva());
@@ -25,21 +24,21 @@ public class CasaEditriceDtoToCasaEditrice {
         
     }
 
-    public CasaEditrice convertWithId(CasaEditriceDTO casaEditriceDTO){
+    // public CasaEditrice convertWithId(CasaEditriceDTO casaEditriceDTO){
 
-        if(casaEditriceDTO == null){
-            return null;
-        }
+    //     if(casaEditriceDTO == null){
+    //         return null;
+    //     }
 
-        final CasaEditrice casaEditrice = new CasaEditrice();
+    //     final CasaEditrice casaEditrice = new CasaEditrice();
 
-        casaEditrice.setId(casaEditrice.getId());
-        casaEditrice.setIndirizzo(casaEditriceDTO.getIndirizzo());
-        casaEditrice.setRagioneSociale(casaEditriceDTO.getRagioneSociale());
-        casaEditrice.setPIva(casaEditriceDTO.getPIva());
+    //     casaEditrice.setId(casaEditrice.getId());
+    //     casaEditrice.setIndirizzo(casaEditriceDTO.getIndirizzo());
+    //     casaEditrice.setRagioneSociale(casaEditriceDTO.getRagioneSociale());
+    //     casaEditrice.setPIva(casaEditriceDTO.getPIva());
 
-        return null;
+    //     return null;
         
-    }
+    // }
 
 }
