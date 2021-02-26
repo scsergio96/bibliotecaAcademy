@@ -2,8 +2,6 @@ package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 
-
-
 import it.elearnpath.siav.libreria.dto.ScaffaleDTO;
 import it.elearnpath.siav.libreria.entity.Scaffale;
 
@@ -14,7 +12,6 @@ public interface ScaffaleService {
    ScaffaleDTO findById(Integer id);
 
    void save(ScaffaleDTO scaffaleDTO);
-
 
    void deleteById(Integer id);
 

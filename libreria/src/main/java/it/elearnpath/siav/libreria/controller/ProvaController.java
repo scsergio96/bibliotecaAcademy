@@ -1,6 +1,5 @@
 package it.elearnpath.siav.libreria.controller;
 
-import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import it.elearnpath.siav.libreria.entity.Autore;

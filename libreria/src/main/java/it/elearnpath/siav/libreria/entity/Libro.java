@@ -1,7 +1,6 @@
 package it.elearnpath.siav.libreria.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,7 +29,7 @@ public class Libro {
     @Size(min = 1, max = 50)
     private String genere;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "casaEditrice", referencedColumnName = "id")
     @JsonBackReference(value = "casa-libro")
     private CasaEditrice casaEditrice;
@@ -56,7 +55,7 @@ public class Libro {
     @Past
     private Date ultimaRistampa;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "posizioneBiblioteca", referencedColumnName = "id")
     @JsonBackReference(value = "scaffale-libro")
     private Scaffale posizioneBiblioteca;

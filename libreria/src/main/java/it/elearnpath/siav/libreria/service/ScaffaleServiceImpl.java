@@ -49,6 +49,7 @@ public class ScaffaleServiceImpl implements ScaffaleService {
 
    }
 
+
    @Override
    public void deleteById(Integer id){
       scaffaleRepository.deleteById(id);
