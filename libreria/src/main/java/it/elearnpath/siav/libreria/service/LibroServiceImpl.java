@@ -2,6 +2,7 @@ package it.elearnpath.siav.libreria.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import it.elearnpath.siav.libreria.dto.CountGenresDTO;
 import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.repository.LibroRepository;
 
@@ -71,6 +73,23 @@ public class LibroServiceImpl implements LibroService {
     @Override
     public List<Libro> getLibriByTitolo(String titolo) {        
         return libroRepository.findAllByTitoloContainingIgnoreCase(titolo);
+    }
+
+    // @Override
+    // public List<String> getNumGenre() {
+    //     List<String> numGenre = libroRepository.getNumForGenres();
+    //     return numGenre;
+    // }
+
+    @Override
+    public List<CountGenresDTO> getNumGenre(){
+        List<String> numGenre = libroRepository.getNumForGenres();
+        List<CountGenresDTO> countGenresDTOList = numGenre.stream()
+                                                          .map(num -> new CountGenresDTO(num.substring(0, 1), num.substring(2)))
+                                                          .collect(Collectors.toList());
+
+
+        return countGenresDTOList;
     }
 
 }
