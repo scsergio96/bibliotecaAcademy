@@ -16,6 +16,8 @@ public interface CasaEditriceService {
 
     CasaEditriceDTO searchByPIva(String pIva);
 
+    List<CasaEditriceDTO> searchByIdOrRagSocialeOrPiva(Integer id, String ragSoc, String pIva);
+
     void addNewCasaEdi(CasaEditriceDTO casaEditrice);
 
     void updateCasaEdi(CasaEditriceDTO casaEditrice);

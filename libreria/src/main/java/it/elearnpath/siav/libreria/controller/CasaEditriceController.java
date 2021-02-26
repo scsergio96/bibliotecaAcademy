@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,6 +53,7 @@ public class CasaEditriceController {
         value = "Elenco di tutte le case editrici", 
         notes = "I dati sono restituiti in formato JSON", 
         response = CasaEditriceDTO.class, 
+        responseContainer = "List",
         produces = "application/json")
     @ApiResponses(value = 
                         { @ApiResponse(code = 200, message = "Tutto bene"),
@@ -97,11 +98,7 @@ public class CasaEditriceController {
             throw new NotFoundException("non è presente una casa editrice con id pari a " + id);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
     }
 
 
@@ -128,11 +125,7 @@ public class CasaEditriceController {
             throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa ragione sociale " + ragSoc);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
 
     }
 
@@ -159,12 +152,30 @@ public class CasaEditriceController {
             throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa partita iva" + pIva);
         }
 
-        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
 
-        headers.add("Access-Control-Allow-Origin", "*");
+    }
 
-        return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, headers, HttpStatus.OK);
+    @ApiOperation(
+            value = "Ricerca casa editrice per id, ragione sociale e/o partita iva (restituisce una lista vuota in caso di insucesso)",
+            response = CasaEditriceDTO.class,
+            responseContainer = "List",
+            produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Autore trovato"),
+            @ApiResponse(code = 404, message = "Nessun parametro inserito") })
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<CasaEditriceDTO>> getByProva(@RequestParam(required = false) Integer id,
+                                                            @RequestParam(required = false) String ragioneSociale,
+                                                            @RequestParam(required = false) String pIva) throws NotFoundException {
+                                                                
+        if(id == null && ragioneSociale == null && pIva == null){
+            throw new NotFoundException("Nessun parametro di ricerca inserito");
+        }
 
+        List<CasaEditriceDTO> casaEditriceDTOList = casaEditriceService.searchByIdOrRagSocialeOrPiva(id, ragioneSociale, pIva);
+
+        return new ResponseEntity<List<CasaEditriceDTO>>(casaEditriceDTOList, HttpStatus.OK);
     }
     
     
@@ -202,13 +213,7 @@ public class CasaEditriceController {
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Access-Control-Allow-Origin", "*");
-
-
-        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
         
     }
 
@@ -242,12 +247,7 @@ public class CasaEditriceController {
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
     }
 
 
@@ -272,14 +272,9 @@ public class CasaEditriceController {
             throw new NotFoundException(errMsg);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Access-Control-Allow-Origin", "*");
-
         casaEditriceService.deleteCasaEdi(id);
 
-        return new ResponseEntity<CasaEditriceDTO>(headers, HttpStatus.OK);
+        return new ResponseEntity<CasaEditriceDTO>(HttpStatus.OK);
     
     }
 }

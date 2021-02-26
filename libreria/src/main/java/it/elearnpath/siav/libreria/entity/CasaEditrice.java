@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,16 +21,16 @@ public class CasaEditrice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @Size(min = 10, max = 20)
+    @NotBlank
+    @Size(min = 11, max = 11)
     private String pIva;
 
-    @NotNull
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String ragioneSociale;
 
-    @NotNull
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String indirizzo;
 
     @OneToMany(mappedBy = "casaEditrice", cascade = CascadeType.ALL)

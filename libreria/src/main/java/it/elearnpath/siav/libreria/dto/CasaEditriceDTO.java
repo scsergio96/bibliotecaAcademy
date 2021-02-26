@@ -1,7 +1,7 @@
 package it.elearnpath.siav.libreria.dto;
 
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,15 +20,15 @@ public class CasaEditriceDTO{
     @Id
     private Integer id;
 
-    @NotNull
-    @Size(min = 10, max = 20)
+    @NotBlank(message = "NotBlank.CasaEditrice.pIva.Validation")
+    @Size(min = 11, max = 11, message = "La partita iva deve essere costituita da 11 numeri")
     private String pIva;
 
-    @NotNull
-    @Size(max = 100)
+    @NotBlank(message = "NotBlank.CasaEditrice.ragioneSociale.Validation")
+    @Size(min = 1, max = 100, message = "Size.CasaEditrice.ragioneSociale.Validation")
     private String ragioneSociale;
 
-    @NotNull
-    @Size(max = 100)
+    @NotBlank(message = "NotBlank.CasaEditrice.indirizzo.Validation")
+    @Size(max = 100, message = "Size.CasaEditrice.indirizzo.Validation")
     private String indirizzo;
 }
