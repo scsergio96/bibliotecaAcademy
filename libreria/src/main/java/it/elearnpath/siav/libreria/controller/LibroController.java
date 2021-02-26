@@ -84,8 +84,14 @@ public class LibroController {
     @ApiOperation(value = "Ricerca libro per isbn", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/search/isbn")
-    public ResponseEntity<LibroDTO> searchByIsbn(@RequestParam(required = false) String isbn) throws NotFoundException {
+    @GetMapping(value = "/search/isbn/{isbn}")
+    public ResponseEntity<LibroDTO> searchByIsbn(@PathVariable("isbn") String isbn) throws NotFoundException {
+
+
+        if (!libroService.getLibroByIsbn(isbn).isPresent()) {
+            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", isbn);
+            throw new NotFoundException(errMsg);
+        }
 
         Libro libro = libroService.getLibroByIsbn(isbn).get();
         return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), HttpStatus.OK);
@@ -100,8 +106,11 @@ public class LibroController {
     public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
             throws NotFoundException {
 
+
         List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+            
 
         return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
