@@ -24,7 +24,8 @@ public class LibroToLibroDto {
         libroDTO.setDescrizione(libro.getDescrizione());
         libroDTO.setCasaEditrice(libro.getCasaEditrice().getRagioneSociale());
         libroDTO.setGenere(libro.getGenere());
-        libroDTO.setPosizioneScaffale(libro.getPosizioneBiblioteca().getNumero().toString().concat("-").concat(libro.getPosizioneBiblioteca().getRipiano().toString()));
+        libroDTO.setPosizione(libro.getPosizioneBiblioteca().getNumero());
+        libroDTO.setRipiano(libro.getPosizioneBiblioteca().getRipiano());
         libroDTO.setLingua(libro.getLingua());
         libroDTO.setIdAutore(libro.getAutori().stream().map(autore -> autore.getId()).collect(Collectors.toList()));
         libroDTO.setNomeAutore(libro.getAutori().stream().map(autore -> autore.getNome()).collect(Collectors.toList()));
