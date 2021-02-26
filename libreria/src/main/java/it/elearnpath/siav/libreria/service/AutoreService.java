@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AutoreService {
 
-    List<AutoreDTO> findAllPaging(int page);
+    List<AutoreDTO> findAllPaging(Integer page, Integer pageSize);
 
     List<AutoreDTO> searchByIdOrNameOrSurname(Integer id, String name, String surname);
 
