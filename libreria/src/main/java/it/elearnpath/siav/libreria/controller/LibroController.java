@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
@@ -52,12 +53,36 @@ public class LibroController {
             throw new NotFoundException(errMsg);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-
         Libro libro = libroService.getLibro(id).get();
-        return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), headers, HttpStatus.OK);
+        return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "Ricerca libro per isbn", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/search/isbn")
+    public ResponseEntity<LibroDTO> searchByIsbn(@RequestParam(required = false) String isbn) throws NotFoundException {
+
+        Libro libro = libroService.getLibroByIsbn(isbn).get();
+        return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "Ricerca libro per id", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/search2")
+    public ResponseEntity<List<LibroDTO>> searchByIdOrIsbnOrTitolo(@RequestParam(required = false) Integer id,
+            @RequestParam(required = false) String isbn, @RequestParam(required = false) String titolo)
+            throws NotFoundException {
+
+        List<Libro> libri = libroService.getLibroByIdOrIsbnOrTitolo(id, isbn, titolo);
+
+        List<LibroDTO> libriDTO = libri.stream().map(libro -> libroToLibroDto.convert(libro))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<List<LibroDTO>>(libriDTO, HttpStatus.OK);
 
     }
 
@@ -73,13 +98,10 @@ public class LibroController {
             throw new NotFoundException(errMsg);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-
         List<LibroDTO> libri = (libroService.getLibri(PageRequest.of(page, 10))).stream()
                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
-        return new ResponseEntity<List<LibroDTO>>(libri, headers, HttpStatus.OK);
+
+        return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
     }
 
@@ -91,10 +113,7 @@ public class LibroController {
         Libro libro = libroDtoToLibro.convert(libroDTO);
         libroService.insLibro(libro);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<LibroDTO>(headers, HttpStatus.OK);
+        return new ResponseEntity<LibroDTO>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Aggiornamento del libro tramite id", notes = "I dati vengono aggiornati solo se differiscono da quelli presenti nel DB o sono diversi da null", response = LibroDTO.class, produces = "application/json")
@@ -109,10 +128,7 @@ public class LibroController {
         }
         libroService.insLibro(libro);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-
-        return new ResponseEntity<LibroDTO>(headers, HttpStatus.OK);
+        return new ResponseEntity<LibroDTO>(HttpStatus.OK);
 
     }
 
@@ -129,10 +145,16 @@ public class LibroController {
 
         libroService.delLibro(id);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
+        return new ResponseEntity<LibroDTO>(HttpStatus.OK);
+    }
 
-        return new ResponseEntity<LibroDTO>(headers, HttpStatus.OK);
+    @ApiOperation(value = "Restituisce una lista di generi", response = List.class, produces = "application/json")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+            @ApiResponse(code = 400, message = "Errore generico") })
+    @GetMapping(value = "/genres")
+    public ResponseEntity<List<String>> showGenres() {
+        List<String> genres = libroService.getGenres();
+        return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
     }
 
 }
