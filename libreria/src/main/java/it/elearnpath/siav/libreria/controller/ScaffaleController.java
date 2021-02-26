@@ -76,12 +76,7 @@ public class ScaffaleController {
         Integer i = scaffaleDTO.getId();
         System.out.println(i);
         
-      //  if(scaffaleService.findById(i) == null){
-      //      scaffaleService.save(scaffaleDTO);
-      //  }else{
-      //      System.out.println("Esiste gia");
-      //      throw new DuplicateException();
-      //  }
+    
 
         if(scaffaleService.findById(i) == null){
             scaffaleService.save(scaffaleDTO);
