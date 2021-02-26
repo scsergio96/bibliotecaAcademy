@@ -2,7 +2,9 @@ package it.elearnpath.siav.libreria.converter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import it.elearnpath.siav.libreria.dto.LibroDTO;
@@ -10,35 +12,31 @@ import it.elearnpath.siav.libreria.entity.Autore;
 import it.elearnpath.siav.libreria.entity.CasaEditrice;
 import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.entity.Scaffale;
+import it.elearnpath.siav.libreria.repository.AutoreRepository;
+import it.elearnpath.siav.libreria.repository.CasaEditriceRepository;
+import it.elearnpath.siav.libreria.repository.ScaffaleRepository;
 
 @Component
 public class LibroDtoToLibro {
 
+    @Autowired
+    CasaEditriceRepository casaEditriceRepository;
+
+    @Autowired
+    ScaffaleRepository scaffaleRepository;
+
+    @Autowired
+    AutoreRepository autoreRepository;
+
     public Libro convert(LibroDTO libroDTO) {
+
+        List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
+        .collect(Collectors.toList());
+
 
         if (libroDTO == null) {
             return null;
         }
-
-        Autore autore = new Autore();
-        autore.setId(11);
-        autore.setNome("alessandro");
-        autore.setCognome("manzoni");
-        autore.setNazionalita("italiana");
-        autore.setBiografia("biografia di prova");
-        List<Autore> autoriMock = new ArrayList<Autore>();
-        autoriMock.add(autore);
-
-        CasaEditrice casaEditrice = new CasaEditrice();
-        casaEditrice.setId(1);
-        casaEditrice.setRagioneSociale("Mondadori");
-        casaEditrice.setIndirizzo("Via Roma");
-        casaEditrice.setPIva("1234567890");
-
-        Scaffale scaffale = new Scaffale();
-        scaffale.setId(1);
-        scaffale.setNumero(1);
-        scaffale.setRipiano(1);
 
         final Libro libro = new Libro();
 
@@ -49,13 +47,14 @@ public class LibroDtoToLibro {
         libro.setPrimaEdizione(libroDTO.getPrimaPubblicazione());
         libro.setUltimaRistampa(libroDTO.getUltimaStampa());
         libro.setDescrizione(libroDTO.getDescrizione());
-        libro.setAutori(autoriMock);
-        libro.setCasaEditrice(casaEditrice);
+        libro.setAutori(autori);
+        libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
         libro.setGenere(libroDTO.getGenere());
-        libro.setPosizioneBiblioteca(scaffale);
+        libro.setPosizioneBiblioteca(scaffaleRepository.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano()).get());
         libro.setLingua(libroDTO.getLingua());
 
         return libro;
+
 
     }
 
@@ -65,25 +64,8 @@ public class LibroDtoToLibro {
             return null;
         }
 
-        Autore autore = new Autore();
-        autore.setId(11);
-        autore.setNome("alessandro");
-        autore.setCognome("manzoni");
-        autore.setNazionalita("italiana");
-        autore.setBiografia("biografia di prova");
-        List<Autore> autoriMock = new ArrayList<Autore>();
-        autoriMock.add(autore);
-
-        CasaEditrice casaEditrice = new CasaEditrice();
-        casaEditrice.setId(1);
-        casaEditrice.setRagioneSociale("Mondadori");
-        casaEditrice.setIndirizzo("Via Roma");
-        casaEditrice.setPIva("1234567890");
-
-        Scaffale scaffale = new Scaffale();
-        scaffale.setId(1);
-        scaffale.setNumero(1);
-        scaffale.setRipiano(1);
+        List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
+        .collect(Collectors.toList());
 
         final Libro libro = new Libro();
 
@@ -94,10 +76,10 @@ public class LibroDtoToLibro {
         libro.setPrimaEdizione(libroDTO.getPrimaPubblicazione());
         libro.setUltimaRistampa(libroDTO.getUltimaStampa());
         libro.setDescrizione(libroDTO.getDescrizione());
-        libro.setAutori(autoriMock);
-        libro.setCasaEditrice(casaEditrice);
+        libro.setAutori(autori);
+        libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
         libro.setGenere(libroDTO.getGenere());
-        libro.setPosizioneBiblioteca(scaffale);
+        libro.setPosizioneBiblioteca(scaffaleRepository.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano()).get());
         libro.setLingua(libroDTO.getLingua());
 
         return libro;
