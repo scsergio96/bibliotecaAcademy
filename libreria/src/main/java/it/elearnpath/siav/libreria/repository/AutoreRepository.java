@@ -15,4 +15,6 @@ public interface AutoreRepository extends JpaRepository<Autore, Integer> {
     List<Autore> findByOrderByCognomeAscNomeAsc(Pageable pageable);
 
     Optional<Autore> findById(Integer id);
+
+    List<Autore> findAllById(Integer id);
 }

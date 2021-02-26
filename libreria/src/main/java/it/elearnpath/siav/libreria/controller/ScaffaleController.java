@@ -1,10 +1,12 @@
 package it.elearnpath.siav.libreria.controller;
 
+import org.apache.logging.log4j.message.Message;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.HttpHeaders;
 
-
+import java.net.BindException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+import javax.validation.Valid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -65,7 +67,12 @@ public class ScaffaleController {
     }
 
     @PostMapping("/inserisco")
-    public ResponseEntity<?> inseriscoScaffale(@RequestBody  ScaffaleDTO scaffaleDTO) throws DuplicateException {
+    public ResponseEntity<?> inseriscoScaffale(@RequestBody  @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult) throws DuplicateException,
+            BindException {
+
+        if(bindingResult.hasErrors()){
+            throw new BindException("You have put an wrong value, check your date");
+        }
 
        // scaffaleService.save(scaffale);
 
@@ -76,12 +83,7 @@ public class ScaffaleController {
         Integer i = scaffaleDTO.getId();
         System.out.println(i);
         
-      //  if(scaffaleService.findById(i) == null){
-      //      scaffaleService.save(scaffaleDTO);
-      //  }else{
-      //      System.out.println("Esiste gia");
-      //      throw new DuplicateException();
-      //  }
+    
 
         if(scaffaleService.findById(i) == null){
             scaffaleService.save(scaffaleDTO);

@@ -28,7 +28,9 @@ public class LibroDTO {
 
     private String genere;
 
-    private String posizioneScaffale;
+    private Integer posizione;
+
+    private Integer ripiano;
 
     private String lingua;
 

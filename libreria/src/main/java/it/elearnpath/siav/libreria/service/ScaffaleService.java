@@ -13,8 +13,6 @@ public interface ScaffaleService {
 
    void save(ScaffaleDTO scaffaleDTO);
 
-   void saveUpdateScafale(ScaffaleDTO scaffale);
-
    void deleteById(Integer id);
 
 }
