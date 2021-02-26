@@ -68,4 +68,9 @@ public class LibroServiceImpl implements LibroService {
         return libroRepository.findByIsbnLike(isbn);
     }
 
+    @Override
+    public List<Libro> getLibriByTitolo(String titolo) {        
+        return libroRepository.findAllByTitoloContainingIgnoreCase(titolo);
+    }
+
 }
