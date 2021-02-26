@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import org.springframework.http.HttpHeaders;
 import java.net.BindException;
 import java.util.List;
@@ -30,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/scaffale")
+@Api(value = "scaffale", tags="Controller gestione Scaffale")
 public class ScaffaleController {
 
     ModelMapper modelMapper = new ModelMapper();
@@ -40,6 +47,17 @@ public class ScaffaleController {
     @Autowired
     private ResourceBundleMessageSource errMsg;
 
+
+    @ApiOperation(
+        value = "Elenco di tutte le scaffali",
+        notes = "I dati sono restituiti in formato JSON",
+        response = ScaffaleDTO.class,
+        responseContainer = "List",
+        produces = "application/json")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Tutto bene"),
+        @ApiResponse(code = 400, message = "Errore generico")
+    })
     @GetMapping()
     public ResponseEntity<List<ScaffaleDTO>> findAll() {
 
@@ -48,7 +66,17 @@ public class ScaffaleController {
 
         return new ResponseEntity<List<ScaffaleDTO>>(scaffaleDTO, HttpStatus.OK);
     }
-
+     
+    @ApiOperation(
+        value = "Ricerca scaffale per id",
+        notes = "I dati sono ritornati in formato JSON",
+        response = ScaffaleDTO.class,
+        produces = "application/json"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code=200, message ="Tutto bene"),
+        @ApiResponse(code = 404, message = "Elemento non trovato")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ScaffaleDTO> findById(@PathVariable Integer id) {
 
@@ -57,7 +85,16 @@ public class ScaffaleController {
         return new ResponseEntity<ScaffaleDTO>(scaffaleDTO, HttpStatus.OK);
 
     }
-
+    @ApiOperation(
+        value = "Inserimento di un scaffale se non presente nel DB",
+        notes = "I dati sono ritornati in formato JSON",
+        response = ScaffaleDTO.class,
+        produces = "application/json"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code=201, message ="Elemento inserito correttamente"),
+        @ApiResponse(code = 406, message = "Elemento duplicato")
+    })
     @PostMapping("/inserisco")
     public ResponseEntity<?> inseriscoScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult)
             throws DuplicateException, BindException {
@@ -88,7 +125,16 @@ public class ScaffaleController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
     }
-
+    @ApiOperation(
+        value = "Aggiornamento di una casa editrice se presente in DB",
+        notes = "I dati sono ritornati in formato JSON",
+        response = ScaffaleDTO.class,
+        produces = "application/json"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code=201, message ="Elemento aggiornato correttamente"),
+        @ApiResponse(code = 404, message = "Elemento non presente")
+    })
     @PutMapping("/aggiorno")
     public ResponseEntity<?> uploadScafale(@RequestBody ScaffaleDTO scaffaleDTO) {
 
@@ -111,7 +157,16 @@ public class ScaffaleController {
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
-
+    @ApiOperation(
+        value = "Cancellazione di un scaffale nel DB",
+        notes = "I dati sono ritornati in formato JSON",
+        response = ScaffaleDTO.class,
+        produces = "application/json"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code=200, message ="Elemento cancellato correttamente"),
+        @ApiResponse(code = 404, message = "Elemento non presente")
+    })
     @DeleteMapping("/elimina")
     public ResponseEntity<?> deleteScaffale(@RequestBody Scaffale scaffale) {
 
