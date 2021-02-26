@@ -1,8 +1,9 @@
 package it.elearnpath.siav.libreria.controller;
 
-import org.apache.logging.log4j.message.Message;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,25 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.HttpHeaders;
-
 import java.net.BindException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import it.elearnpath.siav.libreria.dto.ScaffaleDTO;
 import it.elearnpath.siav.libreria.entity.Scaffale;
-
 import it.elearnpath.siav.libreria.exception.DuplicateException;
-
 import it.elearnpath.siav.libreria.service.ScaffaleService;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,15 +37,14 @@ public class ScaffaleController {
     @Autowired
     private ScaffaleService scaffaleService;
 
+    @Autowired
+    private ResourceBundleMessageSource errMsg;
+
     @GetMapping()
     public ResponseEntity<List<ScaffaleDTO>> findAll() {
 
-        List<ScaffaleDTO> scaffaleDTO = scaffaleService.findAll()
-                                                        .stream()
-                                                        .map(scaffale -> modelMapper.map(scaffale, ScaffaleDTO.class))
-                                                        .collect(Collectors.toList());
-
-        
+        List<ScaffaleDTO> scaffaleDTO = scaffaleService.findAll().stream()
+                .map(scaffale -> modelMapper.map(scaffale, ScaffaleDTO.class)).collect(Collectors.toList());
 
         return new ResponseEntity<List<ScaffaleDTO>>(scaffaleDTO, HttpStatus.OK);
     }
@@ -67,28 +59,26 @@ public class ScaffaleController {
     }
 
     @PostMapping("/inserisco")
-    public ResponseEntity<?> inseriscoScaffale(@RequestBody  @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult) throws DuplicateException,
-            BindException {
+    public ResponseEntity<?> inseriscoScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult)
+            throws DuplicateException, BindException {
 
-        if(bindingResult.hasErrors()){
-            throw new BindException("You have put an wrong value, check your date");
+        if (bindingResult.hasErrors()) {
+
+            String err = errMsg.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+
+            throw new BindException(err);
         }
-
-       // scaffaleService.save(scaffale);
 
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper mapper = new ObjectMapper();
-        
+
         headers.setContentType(MediaType.APPLICATION_JSON);
         Integer i = scaffaleDTO.getId();
         System.out.println(i);
-        
-    
 
-        if(scaffaleService.findById(i) == null){
+        if (scaffaleService.findById(i) == null) {
             scaffaleService.save(scaffaleDTO);
         }
-        
 
         ObjectNode responseNode = mapper.createObjectNode();
 
@@ -98,23 +88,21 @@ public class ScaffaleController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
     }
-    
+
     @PutMapping("/aggiorno")
-    public ResponseEntity<?> uploadScafale(@RequestBody ScaffaleDTO scaffaleDTO){
+    public ResponseEntity<?> uploadScafale(@RequestBody ScaffaleDTO scaffaleDTO) {
 
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper mapper = new ObjectMapper();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
-        
+
         int i = scaffaleDTO.getId();
 
-        if(scaffaleService.findById(i) != null){
-            
-           scaffaleService.save(scaffaleDTO);
-        }
+        if (scaffaleService.findById(i) != null) {
 
-        
+            scaffaleService.save(scaffaleDTO);
+        }
 
         ObjectNode responseNode = mapper.createObjectNode();
 
@@ -123,18 +111,16 @@ public class ScaffaleController {
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
- 
-       @DeleteMapping("/elimina")
-       public ResponseEntity<?> deleteScaffale(@RequestBody Scaffale scaffale){
+
+    @DeleteMapping("/elimina")
+    public ResponseEntity<?> deleteScaffale(@RequestBody Scaffale scaffale) {
 
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper mapper = new ObjectMapper();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        scaffaleService.deleteById(scaffale.getId());
 
-        
+        scaffaleService.deleteById(scaffale.getId());
 
         ObjectNode responseNode = mapper.createObjectNode();
 
@@ -142,5 +128,5 @@ public class ScaffaleController {
         responseNode.put("message", "Eseguita Con Successo");
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
-       }
+    }
 }
