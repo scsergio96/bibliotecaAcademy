@@ -40,4 +40,6 @@ public class LibroDTO {
 
     private List<String> cognomeAutore;
 
+    private Boolean isAvailable;
+
 }

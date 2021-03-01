@@ -55,6 +55,8 @@ public class Libro {
     @Past
     private Date ultimaRistampa;
 
+    private Boolean isAvailable = true;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "posizioneBiblioteca", referencedColumnName = "id")
     @JsonBackReference(value = "scaffale-libro")
@@ -190,4 +192,12 @@ public class Libro {
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
 }
