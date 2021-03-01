@@ -41,6 +41,9 @@ public class LoanController {
 
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<LoanDTO> addLoanByReaderIdAndBookIdNoCheck(@RequestBody)
+
 //    @PostMapping("/add")
 //    public ResponseEntity addNewLoan(@RequestBody Integer bookId) {
 //
