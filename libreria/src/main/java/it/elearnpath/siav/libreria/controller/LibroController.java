@@ -112,11 +112,6 @@ public class LibroController {
     public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
             throws NotFoundException {
 
-        if (!libroService.getLibriByTitolo(titolo).isEmpty()) {
-            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", titolo);
-            throw new NotFoundException(errMsg);
-        }
-
         List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
 
@@ -131,11 +126,6 @@ public class LibroController {
     @GetMapping(value = "/search/genere/{genere}")
     public ResponseEntity<List<LibroDTO>> searchAllByGenere(@PathVariable("genere") @Valid String genere)
             throws NotFoundException {
-
-        if (!libroService.getLibriByGenere(genere).isEmpty()) {
-            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", genere);
-            throw new NotFoundException(errMsg);
-        }
 
         List<LibroDTO> libri = (libroService.getLibriByGenere(genere)).stream()
                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
