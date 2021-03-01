@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -199,6 +198,8 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
     @Override
     public void addNewCasaEdi(CasaEditriceDTO casaEditrice) {
         
+        //CasaEditrice casaEditrice1 = modelMapper.map(casaEditrice, CasaEditrice.class);
+
         CasaEditrice casaEditrice1 = casaEditriceDtoToCasaEditrice.convert(casaEditrice);
 
         casaEditriceRepository.save(casaEditrice1);
@@ -213,7 +214,9 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
     @Override
     public void updateCasaEdi(CasaEditriceDTO casaEditrice) { 
         
-        CasaEditrice casaEditrice1 = casaEditriceDtoToCasaEditrice.convert(casaEditrice);
+        //CasaEditrice casaEditrice1 = casaEditriceDtoToCasaEditrice.convertWithId(casaEditrice);
+
+        CasaEditrice casaEditrice1 = modelMapper.map(casaEditrice, CasaEditrice.class);
 
         casaEditriceRepository.save(casaEditrice1);
 
