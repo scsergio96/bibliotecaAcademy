@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Configuration;
 
 import it.elearnpath.siav.registry.dto.ReaderDTO;
 import it.elearnpath.siav.registry.entity.Reader;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class ReaderToReaderDto {
 
     public ReaderDTO convert(Reader reader){

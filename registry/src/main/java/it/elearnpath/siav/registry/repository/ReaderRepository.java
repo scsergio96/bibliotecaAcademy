@@ -9,5 +9,5 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     List<Reader> findAll();
 
-    Reader findByCardNumberLike(String cardNumber);
+    Reader findByCardNumber(Integer cardNumber);
 }

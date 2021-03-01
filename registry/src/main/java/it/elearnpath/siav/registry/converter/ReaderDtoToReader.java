@@ -2,7 +2,9 @@ package it.elearnpath.siav.registry.converter;
 
 import it.elearnpath.siav.registry.dto.ReaderDTO;
 import it.elearnpath.siav.registry.entity.Reader;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReaderDtoToReader {
 
 

@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Configuration;
 
 import it.elearnpath.siav.registry.dto.LoanDTO;
 import it.elearnpath.siav.registry.entity.Loan;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class LoanToLoanDto {
 
     public LoanDTO convert(Loan loan){
@@ -18,9 +19,9 @@ public class LoanToLoanDto {
 
         loanDTO.setId(loan.getId());
         loanDTO.setIdBook(loan.getIdBook());
-        loanDTO.setIdReader(loan.getIdReader());
-        loanDTO.setStart(loan.getStart());
-        loanDTO.setEnd(loan.getEnd());
+//        loanDTO.setIdReader(loan.getIdReader());
+//        loanDTO.setStart(loan.getStart());
+//        loanDTO.setEnd(loan.getEnd());
 
         return loanDTO;
     }
