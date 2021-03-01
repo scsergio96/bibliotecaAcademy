@@ -221,7 +221,8 @@ public class CasaEditriceController {
                         { @ApiResponse(code = 201, message = "Elemento aggiornato correttamente"),
                           @ApiResponse(code = 404, message = "Elemento non presente") })
     @PutMapping(value = "/update")
-    public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
+    public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException,
+            DuplicateException {
 
 
         if(bindingResult.hasErrors()){
@@ -237,7 +238,7 @@ public class CasaEditriceController {
             // elemento non presente
             throw new NotFoundException("Non è presente alcuna casa editrice con id pari a " + casaEditriceDTO.getId());
         }
-
+        
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
         return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
