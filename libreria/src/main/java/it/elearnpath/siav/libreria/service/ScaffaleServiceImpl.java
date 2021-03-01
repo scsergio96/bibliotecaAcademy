@@ -59,11 +59,7 @@ public class ScaffaleServiceImpl implements ScaffaleService {
 
       if (scaffale == null) {
          Scaffale scaffaleCreo = new Scaffale();
-
-         scaffaleCreo.setNumero(numero);
-         scaffaleCreo.setRipiano(posizione);
-
-         scaffaleRepository.save(scaffaleCreo);
+         scaffaleCreo.setId(-1);
          return scaffaleCreo;
       }
 
