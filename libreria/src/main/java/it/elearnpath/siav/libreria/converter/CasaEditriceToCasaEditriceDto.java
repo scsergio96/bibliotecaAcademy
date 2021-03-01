@@ -8,6 +8,11 @@ import it.elearnpath.siav.libreria.entity.CasaEditrice;
 @Component
 public class CasaEditriceToCasaEditriceDto {
 
+    /**
+     * Metodo che esegue la conversione da un oggetto DAO ad un DTO
+     * @param casaEditrice oggetto DAO che vogliamo convertire
+     * @return oggeto DTO convertito
+     */
     public CasaEditriceDTO convert(CasaEditrice casaEditrice){
         
         final CasaEditriceDTO casaEditriceDTO = new CasaEditriceDTO();

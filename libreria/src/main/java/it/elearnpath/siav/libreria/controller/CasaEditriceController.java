@@ -198,12 +198,11 @@ public class CasaEditriceController {
         }
 
         CasaEditriceDTO casaEditriceDTO1 = casaEditriceService.searchByPIva(casaEditriceDTO.getPIva());
-
+        
         if(casaEditriceDTO1 != null){
-            System.out.println(casaEditriceDTO1.toString());
-
-            throw new DuplicateException("Elemento già presente nel db");
+            throw new DuplicateException("Elemento gia presente");
         }
+
 
         casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
