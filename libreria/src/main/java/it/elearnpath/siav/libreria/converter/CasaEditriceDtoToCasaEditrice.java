@@ -30,4 +30,22 @@ public class CasaEditriceDtoToCasaEditrice {
         
     }
 
+
+    public CasaEditrice convertWithId(CasaEditriceDTO casaEditriceDTO){
+
+        if(casaEditriceDTO == null){
+            return null;
+        }
+
+        final CasaEditrice casaEditrice = new CasaEditrice();
+
+        casaEditrice.setId(casaEditriceDTO.getId());
+        casaEditrice.setIndirizzo(casaEditriceDTO.getIndirizzo());
+        casaEditrice.setRagioneSociale(casaEditriceDTO.getRagioneSociale());
+        casaEditrice.setPIva(casaEditriceDTO.getPIva());
+
+        return casaEditrice;
+        
+    }
+
 }

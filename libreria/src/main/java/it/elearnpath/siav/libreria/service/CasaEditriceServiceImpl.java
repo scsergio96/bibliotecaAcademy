@@ -214,9 +214,9 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
     @Override
     public void updateCasaEdi(CasaEditriceDTO casaEditrice) { 
         
-        //CasaEditrice casaEditrice1 = casaEditriceDtoToCasaEditrice.convertWithId(casaEditrice);
+        CasaEditrice casaEditrice1 = casaEditriceDtoToCasaEditrice.convertWithId(casaEditrice);
 
-        CasaEditrice casaEditrice1 = modelMapper.map(casaEditrice, CasaEditrice.class);
+        //CasaEditrice casaEditrice1 = modelMapper.map(casaEditrice, CasaEditrice.class);
 
         casaEditriceRepository.save(casaEditrice1);
 
