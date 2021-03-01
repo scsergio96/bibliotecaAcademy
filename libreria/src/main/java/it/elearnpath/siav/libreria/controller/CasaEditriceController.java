@@ -82,7 +82,7 @@ public class CasaEditriceController {
     @ApiResponses(value = 
                         { @ApiResponse(code = 200, message = "Tutto bene"),
                           @ApiResponse(code = 404, message = "Elemento non trovato") })
-    @GetMapping(value = "/search/{id}")
+    @GetMapping(value = "/search/id/{id}")
     public ResponseEntity<CasaEditriceDTO> getById(@PathVariable("id") Integer id) throws NotFoundException {
 
         CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchById(id);

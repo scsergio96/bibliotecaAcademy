@@ -44,10 +44,8 @@ public class LibroDTO {
 
     private Integer ristampa;
 
-    // @NotNull(message = "{NotBlank.Libro.posizione.Validation}")
     private Integer posizione;
     
-    // @NotNull(message = "{NotNull.Libro.ripiano.Validation}")
     @Min(value = 1, message = "{Min.Libro.ripiano.Validation}")
     @Max(value = 5 , message = "{Max.Libro.ripiano.Validation}")
     private Integer ripiano;
