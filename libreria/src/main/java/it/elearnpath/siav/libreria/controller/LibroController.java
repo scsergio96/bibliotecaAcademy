@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +32,7 @@ import it.elearnpath.siav.libreria.converter.LibroToLibroDto;
 import it.elearnpath.siav.libreria.dto.CountGenresDTO;
 import it.elearnpath.siav.libreria.dto.LibroDTO;
 import it.elearnpath.siav.libreria.entity.Libro;
+import it.elearnpath.siav.libreria.exception.BindingException;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
 import it.elearnpath.siav.libreria.service.LibroService;
 
@@ -44,6 +48,9 @@ public class LibroController {
 
     @Autowired
     private LibroDtoToLibro libroDtoToLibro;
+
+    @Autowired
+    private ResourceBundleMessageSource errMessage;
 
     @ApiOperation(value = "Ricerca tutti i libri presenti nel DB", notes = "I risultati son restituite in pagine da 10. La numerazione delle pagine inizia da 0. "
             + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
@@ -154,15 +161,26 @@ public class LibroController {
         return new ResponseEntity<List<CountGenresDTO>>(genres, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Inserisce un libro se non è presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request", response = LibroDTO.class, produces = "application/json")
-    @ApiResponses(value = { @ApiResponse(code = 201, message = "Libro inserito nel DB"),
-            @ApiResponse(code = 400, message = "Errore generico") })
+    @ApiOperation(
+            value = "Inserisce un libro se non è presente nel DB", 
+            notes = "I dati dell'autore vengono prelevati dal body della request")
+    @ApiResponses(value = { 
+            @ApiResponse(code = 201, message = "Libro inserito nel DB"),
+            @ApiResponse(code = 400, message = "Errore generico") 
+        })
     @PostMapping(value = "/add")
-    public ResponseEntity<LibroDTO> insertLibro(@RequestBody @Valid LibroDTO libroDTO) {
+    public ResponseEntity<LibroDTO> insertLibro(@RequestBody @Valid LibroDTO libroDTO, 
+        BindingResult bindingResult) throws BindingException {
+
+        if (bindingResult.hasErrors()) {
+                String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+                throw new BindingException(errMsg);
+        }
+
         Libro libro = libroDtoToLibro.convert(libroDTO);
         libroService.insLibro(libro);
 
-        return new ResponseEntity<LibroDTO>(HttpStatus.OK);
+        return new ResponseEntity<LibroDTO>(HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Aggiornamento del libro tramite id", notes = "I dati vengono aggiornati solo se differiscono da quelli presenti nel DB o sono diversi da null", response = LibroDTO.class, produces = "application/json")

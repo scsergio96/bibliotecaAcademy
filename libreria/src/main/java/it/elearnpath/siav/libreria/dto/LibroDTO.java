@@ -2,36 +2,55 @@ package it.elearnpath.siav.libreria.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 
 import lombok.Data;
 
 @Data
-@JsonIgnoreProperties
 public class LibroDTO {
 
+    @Min(value = 1, message = "{Min.Libro.id.Validation}")
     private Integer id;
 
+    @NotBlank(message = "{NotBlank.Libro.isbn.Validation}")
+    @Size(min = 10, max = 20, message = "{Size.Libro.isbn.Validation}")
     private String isbn;
 
+    @NotBlank(message = "{NotBlank.Libro.titolo.Validation}")
+    @Size(max = 100, message = "{Size.Libro.titolo.Validation}")
     private String titolo;
 
+    @NotBlank(message = "{NotBlank.Libro.pagine.Validation}")
     private Integer pagine;
 
     private String primaPubblicazione;
 
     private String ultimaStampa;
-
+    
+    @NotBlank(message = "{NotBlank.Libro.descrizione.Validation}")
+    @Size(max = 256, message = "{Size.Libro.descrizione.Validation}")
     private String descrizione;
 
     private String casaEditrice;
-
+    
+    @NotBlank(message = "{NotBlank.Libro.genere.Validation}")
+    @Size(max = 50, message = "{Size.Libro.genere.Validation}")
     private String genere;
 
+    @NotBlank(message = "{NotBlank.Libro.posizione.Validation}")
     private Integer posizione;
-
+    
+    @NotBlank(message = "{NotBlank.Libro.ripiano.Validation}")
+    @Min(value = 1, message = "{Min.Libro.ripiano.Validation}")
+    @Max(value = 5 , message = "{Max.Libro.ripiano.Validation}")
     private Integer ripiano;
-
+    
+    @NotBlank(message = "{NotBlank.Libro.lingua.Validation}")
+    @Size(max = 50, message = "{Size.Libro.lingua.Validation}")
     private String lingua;
 
     private List<Integer> idAutore;
