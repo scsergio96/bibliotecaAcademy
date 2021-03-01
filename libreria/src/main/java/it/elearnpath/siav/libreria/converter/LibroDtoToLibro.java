@@ -53,6 +53,7 @@ public class LibroDtoToLibro {
         libro.setGenere(libroDTO.getGenere());
         libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
+        libro.setAvailable(libroDTO.getIsAvailable());
 
         return libro;
 
@@ -84,6 +85,7 @@ public class LibroDtoToLibro {
         libro.setGenere(libroDTO.getGenere());
         libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
+        libro.setAvailable(libroDTO.getIsAvailable());
 
         return libro;
 
