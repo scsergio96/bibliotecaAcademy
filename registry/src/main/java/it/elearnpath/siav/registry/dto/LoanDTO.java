@@ -1,9 +1,10 @@
 package it.elearnpath.siav.registry.dto;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 
 import java.util.Date;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 public class LoanDTO {
@@ -17,6 +18,7 @@ public class LoanDTO {
     @NotNull
     private Integer idReader;
 
+    @NotNull
     private Date start;
 
     private Date end;

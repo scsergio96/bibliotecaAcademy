@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,7 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
     private final CasaEditriceRepository casaEditriceRepository;
     private final CasaEditriceToCasaEditriceDto casaEditriceToCasaEditriceDto;
     private final CasaEditriceDtoToCasaEditrice casaEditriceDtoToCasaEditrice;
-    private ModelMapper modelMapper = new ModelMapper();
+    // private ModelMapper modelMapper = new ModelMapper();
   
 
     public CasaEditriceServiceImpl(CasaEditriceRepository casaEditriceRepository, CasaEditriceToCasaEditriceDto casaEditriceToCasaEditriceDto, CasaEditriceDtoToCasaEditrice casaEditriceDtoToCasaEditrice){
