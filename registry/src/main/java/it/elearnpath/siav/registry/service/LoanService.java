@@ -21,7 +21,7 @@ public class LoanService {
 
     public List<LoanDTO> searchByReaderIdBookId(Integer readerId, Integer bookId) {
         Loan loanExample = new Loan();
-        loanExample.setIdReader(readerId);
+        loanExample.setCardNumber(readerId);
         loanExample.setIdBook(bookId);
 
         List<Loan> loans = loanRepository.findAll(Example.of(loanExample));
@@ -31,7 +31,7 @@ public class LoanService {
             .map(loan -> {
                 LoanDTO loanDTO = new LoanDTO();
                 loanDTO.setId(loan.getId());
-                loanDTO.setIdReader(loan.getIdReader());
+                loanDTO.setCardNumber(loan.getCardNumber());
                 loanDTO.setIdBook(loan.getIdBook());
                 loanDTO.setStart(loan.getStart());
                 loanDTO.setEnd(loan.getEnd());

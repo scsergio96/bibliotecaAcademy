@@ -21,7 +21,7 @@ public class Loan {
     private Integer idBook;
 
     @NotNull
-    private Integer idReader;
+    private Integer cardNumber;
 
     private Date start;
 
