@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
@@ -55,7 +54,7 @@ public class LibroController {
             + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/search/page/{page}")
+    @GetMapping(value = "/search/all/{page}")
     public ResponseEntity<List<LibroDTO>> searchAll(@PathVariable("page") @Valid Integer page)
             throws NotFoundException {
 
@@ -74,7 +73,7 @@ public class LibroController {
     @ApiOperation(value = "Ricerca libro per id", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/search/{id}")
+    @GetMapping(value = "/search/id/{id}")
     public ResponseEntity<LibroDTO> searchById(@PathVariable("id") Integer id) throws NotFoundException {
 
         if (!libroService.getLibro(id).isPresent()) {
@@ -83,6 +82,7 @@ public class LibroController {
         }
 
         Libro libro = libroService.getLibro(id).get();
+
         return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), HttpStatus.OK);
 
     }
@@ -93,13 +93,13 @@ public class LibroController {
     @GetMapping(value = "/search/isbn/{isbn}")
     public ResponseEntity<LibroDTO> searchByIsbn(@PathVariable("isbn") String isbn) throws NotFoundException {
 
-
         if (!libroService.getLibroByIsbn(isbn).isPresent()) {
             String errMsg = String.format("Il libro con isbn %s non è stato trovato!", isbn);
             throw new NotFoundException(errMsg);
         }
 
         Libro libro = libroService.getLibroByIsbn(isbn).get();
+
         return new ResponseEntity<LibroDTO>(libroToLibroDto.convert(libro), HttpStatus.OK);
 
     }
@@ -112,32 +112,60 @@ public class LibroController {
     public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
             throws NotFoundException {
 
+        if (!libroService.getLibriByTitolo(titolo).isEmpty()) {
+            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", titolo);
+            throw new NotFoundException(errMsg);
+        }
 
         List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
-
-            
 
         return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
     }
 
-    @ApiOperation(value = "Ricerca libro per id, isbn o titolo", notes = "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
+    @ApiOperation(value = "Ricerca tutti i libri che contengono la stringa titolo inserita nel path", notes = "Case insensitive"
+            + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
-    @GetMapping(value = "/search2")
-    public ResponseEntity<List<LibroDTO>> searchByIdOrIsbnOrTitolo(@RequestParam(required = false) Integer id,
-            @RequestParam(required = false) String isbn, @RequestParam(required = false) String titolo)
+    @GetMapping(value = "/search/genere/{genere}")
+    public ResponseEntity<List<LibroDTO>> searchAllByGenere(@PathVariable("genere") @Valid String genere)
             throws NotFoundException {
 
-        List<Libro> libri = libroService.getLibroByIdOrIsbnOrTitolo(id, isbn, titolo);
+        if (!libroService.getLibriByGenere(genere).isEmpty()) {
+            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", genere);
+            throw new NotFoundException(errMsg);
+        }
 
-        List<LibroDTO> libriDTO = libri.stream().map(libro -> libroToLibroDto.convert(libro))
-                .collect(Collectors.toList());
+        List<LibroDTO> libri = (libroService.getLibriByGenere(genere)).stream()
+                .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
 
-        return new ResponseEntity<List<LibroDTO>>(libriDTO, HttpStatus.OK);
+        return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
     }
+
+    // @ApiOperation(value = "Ricerca libro per id, isbn o titolo", notes = "I dati
+    // sono restituiti in formato JSON", response = LibroDTO.class, produces =
+    // "application/json")
+    // @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+    // @ApiResponse(code = 400, message = "Errore generico") })
+    // @GetMapping(value = "/search2")
+    // public ResponseEntity<List<LibroDTO>>
+    // searchByIdOrIsbnOrTitolo(@RequestParam(required = false) Integer id,
+    // @RequestParam(required = false) String isbn, @RequestParam(required = false)
+    // String titolo)
+    // throws NotFoundException {
+
+    // List<Libro> libri = libroService.getLibroByIdOrIsbnOrTitolo(id, isbn,
+    // titolo);
+
+    // List<LibroDTO> libriDTO = libri.stream().map(libro ->
+    // libroToLibroDto.convert(libro))
+    // .collect(Collectors.toList());
+
+    // return new ResponseEntity<List<LibroDTO>>(libriDTO, HttpStatus.OK);
+
+    // }
 
     @ApiOperation(value = "Restituisce una lista di generi", response = List.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
@@ -147,7 +175,6 @@ public class LibroController {
         List<String> genres = libroService.getGenres();
         return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
     }
-
 
     @ApiOperation(value = "Restituisce una lista di generi e del numero di libri di tale genere", response = List.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
@@ -160,20 +187,16 @@ public class LibroController {
         return new ResponseEntity<List<CountGenresDTO>>(genres, HttpStatus.OK);
     }
 
-    @ApiOperation(
-            value = "Inserisce un libro se non è presente nel DB", 
-            notes = "I dati dell'autore vengono prelevati dal body della request")
-    @ApiResponses(value = { 
-            @ApiResponse(code = 201, message = "Libro inserito nel DB"),
-            @ApiResponse(code = 400, message = "Errore generico") 
-        })
+    @ApiOperation(value = "Inserisce un libro se non è presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request")
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Libro inserito nel DB"),
+            @ApiResponse(code = 400, message = "Errore generico") })
     @PostMapping(value = "/add")
-    public ResponseEntity<LibroDTO> insertLibro(@RequestBody @Valid LibroDTO libroDTO, 
-        BindingResult bindingResult) throws BindingException {
+    public ResponseEntity<LibroDTO> insertLibro(@RequestBody @Valid LibroDTO libroDTO, BindingResult bindingResult)
+            throws BindingException {
 
         if (bindingResult.hasErrors()) {
-                String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
-                throw new BindingException(errMsg);
+            String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+            throw new BindingException(errMsg);
         }
 
         Libro libro = libroDtoToLibro.convert(libroDTO);
@@ -186,20 +209,20 @@ public class LibroController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @PutMapping(value = "/update")
-    public ResponseEntity<LibroDTO> updateLibro(@RequestBody @Valid LibroDTO libroDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
-        
+    public ResponseEntity<LibroDTO> updateLibro(@RequestBody @Valid LibroDTO libroDTO, BindingResult bindingResult)
+            throws NotFoundException, BindingException {
+
         if (bindingResult.hasErrors()) {
-                String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
-                throw new BindingException(errMsg);
+            String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+            throw new BindingException(errMsg);
         }
-        
+
         Libro libro = libroDtoToLibro.convertWithId(libroDTO);
 
         if (!libroService.getLibro(libro.getId()).isPresent()) {
             String errMsg = String.format("Il libro con codice %s non è stato trovato!", libro.getId());
             throw new NotFoundException(errMsg);
         }
-
 
         libroService.insLibro(libro);
 

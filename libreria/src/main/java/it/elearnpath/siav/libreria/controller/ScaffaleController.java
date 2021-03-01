@@ -77,7 +77,7 @@ public class ScaffaleController {
         @ApiResponse(code=200, message ="Tutto bene"),
         @ApiResponse(code = 404, message = "Elemento non trovato")
     })
-    @GetMapping("/{id}")
+    @GetMapping("/search/{id}")
     public ResponseEntity<ScaffaleDTO> findById(@PathVariable Integer id) {
 
         ScaffaleDTO scaffaleDTO = modelMapper.map(scaffaleService.findById(id), ScaffaleDTO.class);
@@ -95,7 +95,7 @@ public class ScaffaleController {
         @ApiResponse(code=201, message ="Elemento inserito correttamente"),
         @ApiResponse(code = 406, message = "Elemento duplicato")
     })
-    @PostMapping("/inserisco")
+    @PostMapping("/add")
     public ResponseEntity<?> inseriscoScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult)
             throws DuplicateException, BindException {
 
@@ -135,7 +135,7 @@ public class ScaffaleController {
         @ApiResponse(code=201, message ="Elemento aggiornato correttamente"),
         @ApiResponse(code = 404, message = "Elemento non presente")
     })
-    @PutMapping("/aggiorno")
+    @PutMapping("/update")
     public ResponseEntity<?> uploadScafale(@RequestBody ScaffaleDTO scaffaleDTO) {
 
         HttpHeaders headers = new HttpHeaders();
@@ -167,7 +167,7 @@ public class ScaffaleController {
         @ApiResponse(code=200, message ="Elemento cancellato correttamente"),
         @ApiResponse(code = 404, message = "Elemento non presente")
     })
-    @DeleteMapping("/elimina")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteScaffale(@RequestBody Scaffale scaffale) {
 
         HttpHeaders headers = new HttpHeaders();

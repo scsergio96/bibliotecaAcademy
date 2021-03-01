@@ -92,4 +92,9 @@ public class LibroServiceImpl implements LibroService {
         return countGenresDTOList;
     }
 
+    @Override
+    public List<Libro> getLibriByGenere(String genere) {        
+        return libroRepository.findAllByGenereIgnoreCase(genere);
+    }
+
 }

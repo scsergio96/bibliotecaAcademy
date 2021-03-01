@@ -33,4 +33,6 @@ public interface LibroService {
 
     public List<Libro> getLibriByTitolo (String titolo);
 
+    public List<Libro> getLibriByGenere (String genere);
+
 }
