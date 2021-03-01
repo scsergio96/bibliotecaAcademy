@@ -84,6 +84,7 @@ public class LibroDtoToLibro {
         libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
         libro.setAvailable(libroDTO.getIsAvailable());
+        libro.setRistampa(libroDTO.getRistampa());
 
         return libro;
 

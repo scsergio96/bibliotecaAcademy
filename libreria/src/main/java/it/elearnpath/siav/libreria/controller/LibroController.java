@@ -186,12 +186,21 @@ public class LibroController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @PutMapping(value = "/update")
-    public ResponseEntity<LibroDTO> updateLibro(@RequestBody LibroDTO libroDTO) throws NotFoundException {
+    public ResponseEntity<LibroDTO> updateLibro(@RequestBody @Valid LibroDTO libroDTO, BindingResult bindingResult) throws NotFoundException, BindingException {
+        
+        if (bindingResult.hasErrors()) {
+                String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+                throw new BindingException(errMsg);
+        }
+        
         Libro libro = libroDtoToLibro.convertWithId(libroDTO);
+
         if (!libroService.getLibro(libro.getId()).isPresent()) {
             String errMsg = String.format("Il libro con codice %s non è stato trovato!", libro.getId());
             throw new NotFoundException(errMsg);
         }
+
+
         libroService.insLibro(libro);
 
         return new ResponseEntity<LibroDTO>(HttpStatus.OK);

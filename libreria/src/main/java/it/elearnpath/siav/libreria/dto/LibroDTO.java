@@ -42,6 +42,8 @@ public class LibroDTO {
     @Size(max = 50, message = "{Size.Libro.genere.Validation}")
     private String genere;
 
+    private Integer ristampa;
+
     // @NotNull(message = "{NotBlank.Libro.posizione.Validation}")
     private Integer posizione;
     

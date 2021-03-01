@@ -32,6 +32,7 @@ public class LibroToLibroDto {
         libroDTO.setCognomeAutore(
                 libro.getAutori().stream().map(autore -> autore.getCognome()).collect(Collectors.toList()));
         libroDTO.setIsAvailable(libro.getAvailable());
+        libroDTO.setRistampa(libro.getRistampa());
 
         return libroDTO;
     }
