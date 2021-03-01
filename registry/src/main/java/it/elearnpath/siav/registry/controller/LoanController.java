@@ -4,9 +4,10 @@ import it.elearnpath.siav.registry.dto.BookDTO;
 import it.elearnpath.siav.registry.dto.LoanDTO;
 import it.elearnpath.siav.registry.dto.ReaderDTO;
 import it.elearnpath.siav.registry.entity.Loan;
-import it.elearnpath.siav.registry.entity.Reader;
+import it.elearnpath.siav.registry.exception.NotFoundException;
 import it.elearnpath.siav.registry.service.LoanService;
 import it.elearnpath.siav.registry.service.ReaderService;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,12 @@ public class LoanController {
 
     private final LoanService loanService;
     private final ReaderService readerService;
+    private final RestTemplate restTemplate;
 
-    public LoanController(LoanService loanService, ReaderService readerService) {
+    public LoanController(LoanService loanService, ReaderService readerService, RestTemplate restTemplate) {
         this.loanService = loanService;
         this.readerService = readerService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/search")
@@ -42,24 +45,36 @@ public class LoanController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<LoanDTO> insertLoanByReaderCardNumberAndBookId(@RequestBody LoanDTO loanDTO) {
+    public ResponseEntity<LoanDTO> insertLoanByReaderCardNumberAndBookId(@RequestBody LoanDTO loanDTO)
+            throws Exception {
 
-        RestTemplate restTemplate = new RestTemplate();
-
-        Optional<BookDTO> bookResponse = Optional.empty();
+        BookDTO bookResponse = null;
         Optional<ReaderDTO> reader = Optional.empty();
 
         if (loanDTO.getIdBook() != null) {
             String urlBook = "http://localhost:8080/books/search/" + loanDTO.getIdBook();
 
-            bookResponse = Optional.of(restTemplate.getForObject(urlBook, BookDTO.class));
-        } // TODO else throw new BookNotFoundException
+            HttpEntity prova = restTemplate.getForEntity(urlBook, BookDTO.class);
+
+            ResponseEntity<BookDTO> responseEntityBook = restTemplate.getForEntity(urlBook, BookDTO.class);
+            HttpStatus responseEntityBookStatus = responseEntityBook.getStatusCode();
+
+            if (responseEntityBookStatus == HttpStatus.OK) {
+                bookResponse = responseEntityBook.getBody();
+            } else if (responseEntityBookStatus == HttpStatus.NOT_FOUND) {
+                throw new NotFoundException("The book is not present in the repository");
+            } else {
+                throw new Exception("Generic exception");
+            }
+        } else {
+            throw new NotFoundException("The book id is required");
+        }
 
         if (loanDTO.getCardNumber() != null) {
             reader = Optional.of(readerService.findByCardNumber(loanDTO.getCardNumber()));
         } // TODO else throw new ReaderNotFoundException
 
-        if (bookResponse.isPresent() && reader.isPresent()) {
+        if (reader.isPresent()) {
 
             loanService.save(loanDTO, reader.get().getId());
 
@@ -69,17 +84,14 @@ public class LoanController {
         return new ResponseEntity<LoanDTO>(HttpStatus.OK);
     }
 
+    @PutMapping("/mylittlepony")
+    public ResponseEntity<LoanDTO> updateLoanIfPresent(@RequestBody LoanDTO loanDTO) throws NotFoundException {
 
-//    @PostMapping("/add")
-//    public ResponseEntity addNewLoan(@RequestBody Integer bookId) {
-//
-//        if (bookId != null) {
-//            loanService.addNewLoan(bookId);
-//        }
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//
-//    }
+        LoanDTO loanDTOUpdated = loanService.updateLoanIfPresent(loanDTO);
+
+        return new ResponseEntity<LoanDTO>(loanDTOUpdated, HttpStatus.OK);
+
+    }
 
     @GetMapping("/prova/prova")
     public ResponseEntity<BookDTO> provaProva() {
