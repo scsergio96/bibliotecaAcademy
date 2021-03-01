@@ -1,6 +1,7 @@
 package it.elearnpath.siav.registry.dto;
 
 import lombok.Data;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,8 @@ public class LoanDTO {
 
     @NotNull
     private Integer cardNumber;
+
+    private Integer idReader;
 
     @NotBlank
     private String start;

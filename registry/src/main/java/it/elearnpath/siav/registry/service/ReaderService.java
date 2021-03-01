@@ -17,4 +17,5 @@ public interface ReaderService {
 
     void deleteReaderById(Integer id);
 
+    List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber);
 }

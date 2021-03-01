@@ -1,12 +1,13 @@
 package it.elearnpath.siav.registry.service;
 
-import it.elearnpath.siav.registry.converter.ReaderDtoToReader;
-import it.elearnpath.siav.registry.converter.ReaderToReaderDto;
+import it.elearnpath.siav.registry.converter.ReaderConverter;
 import it.elearnpath.siav.registry.dto.ReaderDTO;
 import it.elearnpath.siav.registry.entity.Reader;
 import it.elearnpath.siav.registry.repository.ReaderRepository;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,13 +16,9 @@ import java.util.stream.Collectors;
 public class ReaderServiceImpl implements ReaderService{
 
     private final ReaderRepository readerRepository;
-    private final ReaderToReaderDto readerToReaderDto;
-    private final ReaderDtoToReader readerDtoToReader;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository, ReaderToReaderDto readerToReaderDto, ReaderDtoToReader readerDtoToReader){
+    public ReaderServiceImpl(ReaderRepository readerRepository){
         this.readerRepository = readerRepository;
-        this.readerToReaderDto = readerToReaderDto;
-        this.readerDtoToReader = readerDtoToReader;
     }
 
     @Override
@@ -30,7 +27,7 @@ public class ReaderServiceImpl implements ReaderService{
         List<Reader> readers = readerRepository.findAll();
 
         List<ReaderDTO> readersDTO = readers.stream()
-                                            .map(reader -> readerToReaderDto.convert(reader))
+                                            .map(ReaderConverter::convert)
                                             .collect(Collectors.toList());
         return readersDTO;
     }
@@ -41,7 +38,7 @@ public class ReaderServiceImpl implements ReaderService{
         Optional<Reader> readerOptional = readerRepository.findById(id);
 
         if (readerOptional.isPresent()) {
-            ReaderDTO readerDTO = readerToReaderDto.convert(readerOptional.get());
+            ReaderDTO readerDTO = ReaderConverter.convert(readerOptional.get());
 
             return readerDTO;
         }else{
@@ -57,7 +54,7 @@ public class ReaderServiceImpl implements ReaderService{
             return null;
         }
 
-        ReaderDTO readerDTO = readerToReaderDto.convert(reader);
+        ReaderDTO readerDTO = ReaderConverter.convert(reader);
 
         return readerDTO;
 	}
@@ -65,7 +62,7 @@ public class ReaderServiceImpl implements ReaderService{
     @Override
     public void saveReader(ReaderDTO readerDTO) {
 
-        Reader reader = readerDtoToReader.convert(readerDTO);
+        Reader reader = ReaderConverter.convert(readerDTO);
         readerRepository.save(reader);
 
     }
@@ -73,7 +70,7 @@ public class ReaderServiceImpl implements ReaderService{
     @Override
     public void updateEntity(ReaderDTO readerDTO) {
 
-        Reader reader = readerDtoToReader.convertWithId(readerDTO);
+        Reader reader = ReaderConverter.convertWithId(readerDTO);
         if (!reader.getName().equals(readerDTO.getName())) {
             reader.setName(readerDTO.getName());
         }
@@ -96,5 +93,21 @@ public class ReaderServiceImpl implements ReaderService{
 
         readerRepository.delete(readerOptional.get());
 
+    }
+
+    @Override
+    public List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber) {
+        Reader readerExample = new Reader();
+        readerExample.setId(id);
+        readerExample.setCardNumber(cardNumber);
+
+        List<Reader> readers = readerRepository.findAll(Example.of(readerExample));
+        List<ReaderDTO> readerDTOs = new ArrayList<>();
+
+        readerDTOs = readers.stream()
+                .map(ReaderConverter::convert)
+                .collect(Collectors.toList());
+
+        return readerDTOs;
     }
 }

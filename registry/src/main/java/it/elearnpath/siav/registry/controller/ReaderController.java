@@ -36,31 +36,47 @@ public class ReaderController {
     }
 
 
-    @GetMapping("/search/{id}")
-    public ResponseEntity<ReaderDTO> searchReaderById(@PathVariable Integer id) throws Exception {
+//    @GetMapping("/search/{id}")
+//    public ResponseEntity<ReaderDTO> searchReaderById(@PathVariable Integer id) throws Exception {
+//
+//        ReaderDTO readerDTO = readerService.findReaderById(id);
+//
+//        if(readerDTO == null){
+//            throw new Exception("Elemento non presente");
+//        }
+//
+//        return new ResponseEntity<ReaderDTO>(readerDTO, HttpStatus.OK);
+//
+//    }
+//
+//    @GetMapping("/search/{cardNumber}")
+//    public ResponseEntity<ReaderDTO> searchReaderByCodNum(@PathVariable Integer cardNumber) throws Exception {
+//
+//        ReaderDTO readerDTO = readerService.findByCardNumber(cardNumber);
+//
+//        if(readerDTO == null){
+//            throw new Exception("Elemento non presente");
+//        }
+//
+//        return new ResponseEntity<ReaderDTO>(readerDTO, HttpStatus.OK);
+//
+//    }
 
-        ReaderDTO readerDTO = readerService.findReaderById(id);
+    @GetMapping("/search")
+    public ResponseEntity<List<ReaderDTO>> searchReaderByIdOrByCardNumber(@RequestParam(required = false) Integer id,
+                                                                          @RequestParam(required = false) Integer cardNumber)
+            throws Exception {
 
-        if(readerDTO == null){
-            throw new Exception("Elemento non presente");
+        if (id == null && cardNumber == null) {
+            throw new Exception();
         }
 
-        return new ResponseEntity<ReaderDTO>(readerDTO, HttpStatus.OK);
+        List<ReaderDTO> readers = readerService.searchByIdOrCardNumber(id, cardNumber);
+
+        return new ResponseEntity<List<ReaderDTO>>(readers, HttpStatus.OK);
 
     }
 
-    @GetMapping("/search/{cardNumber}")
-    public ResponseEntity<ReaderDTO> searchReaderByCodNum(@PathVariable Integer cardNumber) throws Exception {
-
-        ReaderDTO readerDTO = readerService.findByCardNumber(cardNumber);
-
-        if(readerDTO == null){
-            throw new Exception("Elemento non presente");
-        }
-
-        return new ResponseEntity<ReaderDTO>(readerDTO, HttpStatus.OK);
-
-    }
 
                                                                 /*
                                                                     Metodi di modifica dei dati

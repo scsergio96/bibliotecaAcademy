@@ -1,27 +1,27 @@
 package it.elearnpath.siav.registry.service;
 
-import it.elearnpath.siav.registry.converter.LoanToLoanDto;
+import it.elearnpath.siav.registry.converter.LoanConverter;
 import it.elearnpath.siav.registry.dto.LoanDTO;
 import it.elearnpath.siav.registry.entity.Loan;
+import it.elearnpath.siav.registry.exception.NotFoundException;
 import it.elearnpath.siav.registry.repository.LoanRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class LoanServiceImpl implements LoanService{
 
     private final LoanRepository loanRepository;
-    private final LoanToLoanDto loanToLoanDto;
+    private final RestTemplate restTemplate;
 
-    public LoanServiceImpl(LoanRepository loanRepository, LoanToLoanDto loanToLoanDto) {
+    public LoanServiceImpl(LoanRepository loanRepository, RestTemplate restTemplate) {
         this.loanRepository = loanRepository;
-        this.loanToLoanDto = loanToLoanDto;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -33,38 +33,38 @@ public class LoanServiceImpl implements LoanService{
 
         List<Loan> loans = loanRepository.findAll(Example.of(loanExample));
         List<LoanDTO> loanDTOs = loans.stream()
-                                      .map(loan -> loanToLoanDto.convert(loan))
+                                      .map(LoanConverter::convert)
                                       .collect(Collectors.toList());
         return loanDTOs;
     }
 
     @Override
     public void save(LoanDTO loanDTO, Integer idReader) {
-        Loan loan = new Loan();
-        loan.setIdBook(loanDTO.getIdBook());
-        loan.setIdReader(idReader);
-        loan.setStart(converterStringToDate(loanDTO.getStart()));
-        loan.setEnd(null);
+
+        loanDTO.setIdReader(idReader);
+
+        Loan loan = LoanConverter.convert(loanDTO);
 
         loanRepository.save(loan);
     }
 
-    private String converterDateToString(Date date) {
-        if(date != null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            return simpleDateFormat.format(date).toString();
-        } else return null;
-    }
+    @Override
+    public LoanDTO updateLoanIfPresent(LoanDTO loanDTO) throws NotFoundException {
 
-    private Date converterStringToDate(String date) {
-        if(date != "") {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                return simpleDateFormat.parse(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else return null;
+        Loan loan = LoanConverter.convert(loanDTO);
+        Optional<Loan> oldLoan;
+
+        if (loan.getId() != null) {
+            oldLoan = loanRepository.findById(loan.getId());
+        } else {
+            throw new NotFoundException("Loan id cannot be null");
+        }
+
+        if (oldLoan.isPresent()) {
+            loanRepository.save(loan);
+            return LoanConverter.convert(loan);
+        } else {
+            throw new NotFoundException("Loan not present in the repository");
+        }
     }
 }
