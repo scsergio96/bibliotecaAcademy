@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -24,7 +25,7 @@ public class LibroDTO {
     @Size(max = 100, message = "{Size.Libro.titolo.Validation}")
     private String titolo;
 
-    @NotBlank(message = "{NotBlank.Libro.pagine.Validation}")
+    @NotNull(message = "{NotNull.Libro.pagine.Validation}")
     private Integer pagine;
 
     private String primaPubblicazione;
@@ -41,15 +42,15 @@ public class LibroDTO {
     @Size(max = 50, message = "{Size.Libro.genere.Validation}")
     private String genere;
 
-    @NotBlank(message = "{NotBlank.Libro.posizione.Validation}")
+    @NotNull(message = "{NotBlank.Libro.posizione.Validation}")
     private Integer posizione;
     
-    @NotBlank(message = "{NotBlank.Libro.ripiano.Validation}")
+    @NotNull(message = "{NotNull.Libro.ripiano.Validation}")
     @Min(value = 1, message = "{Min.Libro.ripiano.Validation}")
     @Max(value = 5 , message = "{Max.Libro.ripiano.Validation}")
     private Integer ripiano;
     
-    @NotBlank(message = "{NotBlank.Libro.lingua.Validation}")
+    @NotNull(message = "{NotNull.Libro.lingua.Validation}")
     @Size(max = 50, message = "{Size.Libro.lingua.Validation}")
     private String lingua;
 
