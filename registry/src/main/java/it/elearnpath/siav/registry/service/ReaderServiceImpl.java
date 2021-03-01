@@ -50,8 +50,8 @@ public class ReaderServiceImpl implements ReaderService{
     }
 
 	@Override
-	public ReaderDTO findByCardNumber(String cardNumber) {
-		Reader reader = readerRepository.findByCardNumberLike(cardNumber);
+	public ReaderDTO findByCardNumber(Integer cardNumber) {
+		Reader reader = readerRepository.findByCardNumber(cardNumber);
 
         if(reader == null){
             return null;

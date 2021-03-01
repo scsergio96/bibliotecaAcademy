@@ -9,7 +9,7 @@ public interface ReaderService {
 
     ReaderDTO findReaderById(Integer id);
 
-    ReaderDTO findByCardNumber(String cardNumber);
+    ReaderDTO findByCardNumber(Integer cardNumber);
 
     void saveReader(ReaderDTO readerDTO);
 

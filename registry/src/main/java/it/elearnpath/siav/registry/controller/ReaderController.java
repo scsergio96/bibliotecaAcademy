@@ -50,9 +50,9 @@ public class ReaderController {
     }
 
     @GetMapping("/search/{cardNumber}")
-    public ResponseEntity<ReaderDTO> searchReaderByCodNum(@PathVariable String cardNumber) throws Exception {
+    public ResponseEntity<ReaderDTO> searchReaderByCodNum(@PathVariable Integer cardNumber) throws Exception {
 
-        ReaderDTO readerDTO = readerService.findByCardNumber(cardNumber)
+        ReaderDTO readerDTO = readerService.findByCardNumber(cardNumber);
 
         if(readerDTO == null){
             throw new Exception("Elemento non presente");
