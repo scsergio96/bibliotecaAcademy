@@ -1,6 +1,5 @@
 package it.elearnpath.siav.libreria.converter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import it.elearnpath.siav.libreria.dto.LibroDTO;
 import it.elearnpath.siav.libreria.entity.Autore;
-import it.elearnpath.siav.libreria.entity.CasaEditrice;
 import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.entity.Scaffale;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
