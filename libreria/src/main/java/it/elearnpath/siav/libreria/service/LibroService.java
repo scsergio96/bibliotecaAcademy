@@ -18,7 +18,7 @@ public interface LibroService {
 
     public Optional<Libro> getLibro(Integer id);
 
-    public void insLibro(Libro libro);
+    public Libro insLibro(Libro libro);
 
     public void delLibro(Integer id);
 
@@ -35,4 +35,6 @@ public interface LibroService {
     public List<Libro> getLibriByTitolo (String titolo);
 
     public List<Libro> getLibriByGenere (String genere);
+
+    public List<Libro> getLibriByAutore (Integer id);
 }

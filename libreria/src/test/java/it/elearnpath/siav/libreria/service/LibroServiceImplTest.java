@@ -33,6 +33,8 @@ public class LibroServiceImplTest {
     @InjectMocks
     private LibroServiceImpl libroServiceImpl;
 
+  
+
     @Test
     public void testGetLibro() {
         final Integer id = 1;
@@ -102,4 +104,54 @@ public class LibroServiceImplTest {
         Assertions.assertFalse(libroFromService.isPresent());
     }
 
+
+    @Test
+    public void testAddLibro() {
+
+        final Libro libro = new Libro();
+        final CasaEditrice casaEditrice = new CasaEditrice();
+
+        casaEditrice.setId(1);
+        casaEditrice.setIndirizzo("Via Roma");
+        casaEditrice.setPIva("12345678901");
+        casaEditrice.setRagioneSociale("Editore1");
+
+        final Scaffale scaffale = new Scaffale();
+        scaffale.setId(1);
+        scaffale.setNumero(1);
+        scaffale.setRipiano(1);
+
+        final Autore autore = new Autore();
+        autore.setId(1);
+        autore.setNome("nome");
+        autore.setCognome("cognome");
+        autore.setDataNascita("2020-10-10");
+        autore.setDataMorte("2010-10-09");
+        autore.setNazionalita("italiana");
+        autore.setBiografia("biografia di prova");
+
+        final List<Autore> autori = new ArrayList<Autore>();
+        autori.add(autore);
+
+        libro.setIsbn("12345678911");
+        libro.setTitolo("prova unit service");
+        libro.setGenere("prova");
+        libro.setPagine(100);
+        libro.setRistampa(1);
+        libro.setDescrizione("Descrizione");
+        libro.setLingua("Italiano");
+        libro.setPrimaEdizione("2000-10-10");
+        libro.setUltimaRistampa("2010-10-10");
+        libro.setAvailable(true);
+        libro.setCasaEditrice(casaEditrice);
+        libro.setPosizioneBiblioteca(scaffale);
+        libro.setAutori(autori);
+
+
+        doReturn(libro).when(libroRepository).save(any());
+
+        Libro libroSave = libroServiceImpl.insLibro(libro);
+        Assertions.assertNotNull(libroSave);
+    }
+    
 }
