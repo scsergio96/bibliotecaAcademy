@@ -143,7 +143,7 @@ public class CasaEditriceController {
         CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchByPIva(pIva);
 
         if(casaEditriceDTO == null){
-            throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa partita iva" + pIva);
+            throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa partita iva " + pIva);
         }
 
         return new ResponseEntity<CasaEditriceDTO>(casaEditriceDTO, HttpStatus.OK);
@@ -219,10 +219,10 @@ public class CasaEditriceController {
         produces = "application/json")
     @ApiResponses(value = 
                         { @ApiResponse(code = 201, message = "Elemento aggiornato correttamente"),
-                          @ApiResponse(code = 404, message = "Elemento non presente") })
+                          @ApiResponse(code = 404, message = "Elemento non presente"), 
+                          @ApiResponse(code = 400, message = "Errore generico")})
     @PutMapping(value = "/update")
-    public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws NotFoundException, BindingException,
-            DuplicateException {
+    public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws Exception {
 
 
         if(bindingResult.hasErrors()){
@@ -238,10 +238,19 @@ public class CasaEditriceController {
             // elemento non presente
             throw new NotFoundException("Non è presente alcuna casa editrice con id pari a " + casaEditriceDTO.getId());
         }
-        
-        casaEditriceService.addNewCasaEdi(casaEditriceDTO);
 
-        return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
+        CasaEditriceDTO casaEditriceDTO2 = casaEditriceService.searchByPIva(casaEditriceDTO.getPIva());
+
+        if((casaEditriceDTO2 != null && casaEditriceDTO1.getId() == casaEditriceDTO2.getId()) || casaEditriceDTO2 == null){
+
+            casaEditriceService.updateCasaEdi(casaEditriceDTO);
+
+            return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
+
+        }else{
+            throw new Exception("Questa partita iva è gia presente");
+        }
+        
     }
 
 
@@ -255,7 +264,7 @@ public class CasaEditriceController {
                         { @ApiResponse(code = 200, message = "Elemento cancellatto correttamente"),
                           @ApiResponse(code = 404, message = "Elemento non presente") })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<CasaEditriceDTO> deleteElemento(@PathVariable("id") Integer id) throws NotFoundException {
+    public ResponseEntity<CasaEditriceDTO> deleteElement(@PathVariable("id") Integer id) throws NotFoundException {
 
         CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchById(id);
 
