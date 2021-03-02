@@ -3,6 +3,7 @@ package it.elearnpath.siav.libreria.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -203,4 +204,5 @@ public class Libro {
     public void setAvailable(Boolean available) {
         isAvailable = available;
     }
+
 }

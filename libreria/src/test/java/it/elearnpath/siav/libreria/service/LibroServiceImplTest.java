@@ -53,8 +53,8 @@ public class LibroServiceImplTest {
         autore.setId(1);
         autore.setNome("nome");
         autore.setCognome("cognome");
-        autore.setDataNascita("2020-10-10");
-        autore.setDataMorte("2010-10-09");
+//        autore.setDataNascita("2020-10-10");
+//        autore.setDataMorte("2010-10-09");
         autore.setNazionalita("italiana");
         autore.setBiografia("biografia di prova");
 

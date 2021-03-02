@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -79,34 +78,16 @@ public class Autore {
         return dataNascita;
     }
 
-    public void setDataNascita(String dataNascita) {
-        String pattern = "yyyy-MM-dd";
-
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            Date date = simpleDateFormat.parse(dataNascita);
-            this.dataNascita = date;
-        } catch (Exception e) {
-            // TODO: Creare error DateFormatException
-            e.getMessage();
-        }
+    public void setDataNascita(Date dataNascita) {
+        this.dataNascita = dataNascita;
     }
 
     public Date getDataMorte() {
         return dataMorte;
     }
 
-    public void setDataMorte(String dataMorte) {
-        String pattern = "yyyy-MM-dd";
-
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            Date date = simpleDateFormat.parse(dataMorte);
-            this.dataMorte = date;
-        } catch (Exception e) {
-            // TODO: Creare error DateFormatException
-            e.getMessage();
-        }
+    public void setDataMorte(Date dataMorte) {
+        this.dataMorte = dataMorte;
     }
 
     public String getNazionalita() {
