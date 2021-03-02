@@ -1,13 +1,14 @@
 package it.elearnpath.siav.registry.service;
 
 import it.elearnpath.siav.registry.converter.LoanConverter;
+import it.elearnpath.siav.registry.dto.BookDTO;
 import it.elearnpath.siav.registry.dto.LoanDTO;
+import it.elearnpath.siav.registry.dto.ReaderDTO;
 import it.elearnpath.siav.registry.entity.Loan;
-import it.elearnpath.siav.registry.exception.NotFoundException;
+import it.elearnpath.siav.registry.exception.BadRequestException;
 import it.elearnpath.siav.registry.repository.LoanRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,23 @@ import java.util.stream.Collectors;
 public class LoanServiceImpl implements LoanService{
 
     private final LoanRepository loanRepository;
-    private final RestTemplate restTemplate;
+    private final LibraryService libraryService;
+    private final ReaderService readerService;
 
-    public LoanServiceImpl(LoanRepository loanRepository, RestTemplate restTemplate) {
+    public LoanServiceImpl(LoanRepository loanRepository, LibraryService libraryService, ReaderService readerService) {
         this.loanRepository = loanRepository;
-        this.restTemplate = restTemplate;
+        this.libraryService = libraryService;
+        this.readerService = readerService;
     }
 
+    /**
+     * Simple search by readerId and bookId calling the query by example method in the repository.
+     * Can be use to retrieve all the records if both params are null (not recommended).
+     *
+     * @param readerId can be null
+     * @param bookId can be null
+     * @return List(LoanDTO)
+     */
     @Override
     public List<LoanDTO> searchByReaderIdBookId(Integer readerId, Integer bookId) {
 
@@ -38,18 +49,19 @@ public class LoanServiceImpl implements LoanService{
         return loanDTOs;
     }
 
+    /**
+     * Update a checked record present in the database.
+     * Before saving the record the libraryService is called to find the book by its id and switching the isAvailable
+     * flag
+     *
+     * CAUTION: Transactionality not safe TODO implementing saga pattern
+     *
+     * @param loanDTO
+     * @return
+     * @throws BadRequestException
+     */
     @Override
-    public void save(LoanDTO loanDTO, Integer idReader) {
-
-        loanDTO.setIdReader(idReader);
-
-        Loan loan = LoanConverter.convert(loanDTO);
-
-        loanRepository.save(loan);
-    }
-
-    @Override
-    public LoanDTO updateLoanIfPresent(LoanDTO loanDTO) throws NotFoundException {
+    public LoanDTO updateLoanIfPresent(LoanDTO loanDTO) throws BadRequestException {
 
         Loan loan = LoanConverter.convert(loanDTO);
         Optional<Loan> oldLoan;
@@ -57,14 +69,66 @@ public class LoanServiceImpl implements LoanService{
         if (loan.getId() != null) {
             oldLoan = loanRepository.findById(loan.getId());
         } else {
-            throw new NotFoundException("Loan id cannot be null");
+            throw new BadRequestException("Loan id cannot be null");
         }
 
+        // This shit gave me an erection TODO test actual functionality
         if (oldLoan.isPresent()) {
+            if (oldLoan.get().getEnd() == null && loan.getEnd() != null) {
+                BookDTO bookDTO = libraryService.searchBookById(loan.getIdBook());
+                libraryService.switchBookIsAvailable(bookDTO);
+            }
             loanRepository.save(loan);
             return LoanConverter.convert(loan);
         } else {
-            throw new NotFoundException("Loan not present in the repository");
+            throw new BadRequestException("Loan not present in the repository");
+        }
+    }
+
+    /**
+     * Helper method to save a record. If id (Loan) is present it will override the record
+     *
+     * @param loanDTO
+     * @return Loan record saved in the DB
+     */
+    private Loan save(LoanDTO loanDTO) {
+
+        Loan loan = LoanConverter.convert(loanDTO);
+
+        return loanRepository.save(loan);
+    }
+
+    /**
+     * Method to insert a valid Loan in the database.
+     * Check if the reader (id) is present. Call the library service to check if the book is present and available.
+     * Save the record in the database and switch the isAvailable flag calling the library service.
+     *
+     * CAUTION: Transactionality not safe TODO implementing saga pattern
+     *
+     * @param loanDTO
+     * @return LoanDTO represent the actual record saved in the database
+     * @throws BadRequestException in case a bookId or a cardNumber is not present in the loanDTO, the reader is not
+     * present in the DB, the book is not available.
+     */
+    @Override
+    public LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException {
+
+        Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
+        BookDTO bookDTO = bookId.map(libraryService::searchBookById)
+                .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
+
+        Optional<Integer> cardNumber = Optional.ofNullable(loanDTO.getCardNumber());
+        ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
+                .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
+
+        if (bookDTO.getIsAvailable()) {
+            loanDTO.setIdReader(readerDTO.getId());
+            Loan loan = save(loanDTO);
+            loanDTO.setId(loan.getId());
+            libraryService.switchBookIsAvailable(bookDTO);
+            return loanDTO;
+        } else {
+            throw new BadRequestException("The book is not currently available");
         }
     }
 }

@@ -1,7 +1,6 @@
 package it.elearnpath.siav.registry.dto;
 
 import lombok.Data;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
