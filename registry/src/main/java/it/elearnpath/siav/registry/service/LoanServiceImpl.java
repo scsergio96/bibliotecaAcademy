@@ -50,7 +50,7 @@ public class LoanServiceImpl implements LoanService{
     }
 
     /**
-     * Update a checked record present in the database.
+     * Update a checked record present in the database. All the value will be overwrote.
      * Before saving the record the libraryService is called to find the book by its id and switching the isAvailable
      * flag
      *
@@ -72,7 +72,7 @@ public class LoanServiceImpl implements LoanService{
             throw new BadRequestException("Loan id cannot be null");
         }
 
-        // This shit gave me an erection TODO test actual functionality
+        // TODO test actual functionality
         if (oldLoan.isPresent()) {
             if (oldLoan.get().getEnd() == null && loan.getEnd() != null) {
                 BookDTO bookDTO = libraryService.searchBookById(loan.getIdBook());
@@ -121,6 +121,7 @@ public class LoanServiceImpl implements LoanService{
         ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
                 .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
 
+        // TODO use the converter to return the saved Loan
         if (bookDTO.getIsAvailable()) {
             loanDTO.setIdReader(readerDTO.getId());
             Loan loan = save(loanDTO);

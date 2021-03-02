@@ -16,6 +16,14 @@
 	<properties>
 		<java.version>15</java.version>
 	</properties>
+	<profiles>
+        <profile>
+            <id>xtest</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

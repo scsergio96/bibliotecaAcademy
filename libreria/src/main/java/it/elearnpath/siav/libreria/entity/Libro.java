@@ -2,6 +2,8 @@ package it.elearnpath.siav.libreria.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -14,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "libro")
 // @Data
+@EqualsAndHashCode
 public class Libro {
 
     @Id
