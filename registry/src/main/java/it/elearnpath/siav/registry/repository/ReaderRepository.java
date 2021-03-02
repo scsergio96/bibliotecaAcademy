@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
+    Reader save(Reader reader);
+
     List<Reader> findAll();
 
     Reader findByCardNumber(Integer cardNumber);
