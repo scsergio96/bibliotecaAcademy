@@ -27,8 +27,8 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public void insLibro(Libro libro) {
-        libroRepository.save(libro);
+    public Libro insLibro(Libro libro) {
+        return libroRepository.save(libro);
     }
 
     @Override
@@ -95,6 +95,11 @@ public class LibroServiceImpl implements LibroService {
     @Override
     public List<Libro> getLibriByGenere(String genere) {        
         return libroRepository.findAllByGenereIgnoreCase(genere);
+    }
+
+    @Override
+    public List<Libro> getLibriByAutore(Integer id) {
+        return libroRepository.findAllLibroByAutore(id);
     }
 
 }
