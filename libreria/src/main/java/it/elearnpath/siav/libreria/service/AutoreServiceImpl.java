@@ -1,7 +1,9 @@
 package it.elearnpath.siav.libreria.service;
 
+import it.elearnpath.siav.libreria.converter.AutoreConverter;
 import it.elearnpath.siav.libreria.dto.AutoreDTO;
 import it.elearnpath.siav.libreria.entity.Autore;
+import it.elearnpath.siav.libreria.exception.BindingException;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
 import org.springframework.data.domain.Example;
@@ -41,17 +43,7 @@ public class AutoreServiceImpl implements AutoreService {
         List<AutoreDTO> autoriDTO = new ArrayList<>();
 
         autoriDTO = autori.stream()
-                .map(autore -> {
-                    AutoreDTO autoreDTO = new AutoreDTO();
-                    autoreDTO.setId(autore.getId());
-                    autoreDTO.setNome(autore.getNome());
-                    autoreDTO.setCognome(autore.getCognome());
-                    autoreDTO.setBiografia(autore.getBiografia());
-                    autoreDTO.setNazionalita(autore.getNazionalita());
-                    autoreDTO.setDataNascita(dateConverter(autore.getDataNascita()));
-                    autoreDTO.setDataMorte(dateConverter(autore.getDataMorte()));
-                    return autoreDTO;
-                })
+                .map(AutoreConverter::convert)
                 .collect(Collectors.toList());
 
         return autoriDTO;
@@ -75,17 +67,7 @@ public class AutoreServiceImpl implements AutoreService {
         List<AutoreDTO> autoriDTO = new ArrayList<>();
 
         autoriDTO = autori.stream()
-            .map(autore -> {
-                AutoreDTO autoreDTO = new AutoreDTO();
-                autoreDTO.setId(autore.getId());
-                autoreDTO.setNome(autore.getNome());
-                autoreDTO.setCognome(autore.getCognome());
-                autoreDTO.setBiografia(autore.getBiografia());
-                autoreDTO.setNazionalita(autore.getNazionalita());
-                autoreDTO.setDataNascita(dateConverter(autore.getDataNascita()));
-                autoreDTO.setDataMorte(dateConverter(autore.getDataMorte()));
-                return autoreDTO;
-            })
+            .map(AutoreConverter::convert)
             .collect(Collectors.toList());
 
         return autoriDTO;
@@ -114,25 +96,13 @@ public class AutoreServiceImpl implements AutoreService {
      * @throws NotFoundException se l'autore non è presente nel database
      */
     public AutoreDTO getAuthorById(Integer id) throws NotFoundException {
-        AutoreDTO autoreDTO = new AutoreDTO();
-        Autore autore = new Autore();
-
         Optional<Autore> autoreOptional = autoreRepository.findById(id);
 
         if(autoreOptional.isPresent()) {
-            autore = autoreOptional.get();
-            autoreDTO.setId(autore.getId());
-            autoreDTO.setNome(autore.getNome());
-            autoreDTO.setCognome(autore.getCognome());
-            autoreDTO.setBiografia(autore.getBiografia());
-            autoreDTO.setNazionalita(autore.getNazionalita());
-            autoreDTO.setDataNascita(dateConverter(autore.getDataNascita()));
-            autoreDTO.setDataMorte(dateConverter(autore.getDataMorte()));
+            return AutoreConverter.convert(autoreOptional.get());
         } else {
             throw new NotFoundException();
         }
-
-        return autoreDTO;
     }
 
     /**
@@ -143,14 +113,12 @@ public class AutoreServiceImpl implements AutoreService {
      * @param autoreDTO
      */
     @Override
-    public void saveAuthor(AutoreDTO autoreDTO) {
-        Autore autore = new Autore();
-        autore.setNome(autoreDTO.getNome());
-        autore.setCognome(autoreDTO.getCognome());
-        autore.setDataNascita(autoreDTO.getDataNascita());
-        autore.setDataMorte(autoreDTO.getDataMorte());
-        autore.setBiografia(autoreDTO.getBiografia());
-        autore.setNazionalita(autoreDTO.getNazionalita());
+    public void saveAuthor(AutoreDTO autoreDTO) throws BindingException {
+        if (autoreDTO.getId() != null) {
+            throw new BindingException("Il campo id deve essere nullo o non essere presente");
+        }
+
+        Autore autore = AutoreConverter.convert(autoreDTO);
 
         autoreRepository.save(autore);
     }
@@ -159,8 +127,6 @@ public class AutoreServiceImpl implements AutoreService {
      * PUT /authors/update
      * Verifico la presenza dell'autore nel DB per id.
      * Verica parametro per parametro di AutoreDTO e Autore.
-     * Copio il valore del parametro di Autore DTO in Autore solo se il primo non è null e
-     * differiscono tra loro
      *
      * @param autoreDTO
      * @throws NotFoundException quando l'autore da modificare non è presente nel database
@@ -170,25 +136,8 @@ public class AutoreServiceImpl implements AutoreService {
         Optional<Autore> autoreOptional = autoreRepository.findById(autoreDTO.getId());
 
         if (autoreOptional.isPresent()) {
-            Autore autore = autoreOptional.get();
-            if (autoreDTO.getNome() != null && !autore.getNome().equals(autoreDTO.getNome())) {
-                autore.setNome(autoreDTO.getNome());
-            }
-            if (autoreDTO.getCognome() != null && !autore.getCognome().equals(autoreDTO.getCognome())) {
-                autore.setCognome(autoreDTO.getCognome());
-            }
-            if (autoreDTO.getNazionalita() != null && !autore.getNazionalita().equals(autoreDTO.getNazionalita())) {
-                autore.setNazionalita(autoreDTO.getNazionalita());
-            }
-            if (autoreDTO.getBiografia() != null && !autore.getBiografia().equals(autoreDTO.getBiografia())) {
-                autore.setBiografia(autoreDTO.getBiografia());
-            }
-            if (autoreDTO.getDataNascita() != null && !dateConverter(autore.getDataNascita()).equals(autoreDTO.getDataNascita())) {
-                autore.setDataNascita(autoreDTO.getDataNascita());
-            }
-            if (autoreDTO.getDataMorte() != null && !dateConverter(autore.getDataMorte()).equals(autoreDTO.getDataMorte())) {
-                autore.setDataMorte(autoreDTO.getDataMorte());
-            }
+            Autore autore = AutoreConverter.convert(autoreDTO);
+
             autoreRepository.save(autore);
         } else {
             throw new NotFoundException();
