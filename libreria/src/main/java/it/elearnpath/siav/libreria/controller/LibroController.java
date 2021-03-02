@@ -112,8 +112,14 @@ public class LibroController {
         public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
                         throws NotFoundException {
 
+                
                 List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
                                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+                if(libri.size()==0) {
+                        String errMsg = String.format("Non sono stati trovati libri con titolo %s", titolo);
+                        throw new NotFoundException(errMsg);
+                }
 
                 return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
