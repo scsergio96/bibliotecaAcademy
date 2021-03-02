@@ -13,8 +13,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.elearnpath.siav.libreria.service.CasaEditriceService;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -34,9 +32,6 @@ public class CasaEditriceControllerTest {
     @Autowired
     private WebApplicationContext wac;
     
-    @Autowired
-    private CasaEditriceService service;
-
     private String baseUrl = "/editors";
 
     @BeforeEach
