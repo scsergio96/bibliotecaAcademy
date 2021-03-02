@@ -77,7 +77,7 @@ public class LibroController {
     public ResponseEntity<LibroDTO> searchById(@PathVariable("id") Integer id) throws NotFoundException {
 
         if (!libroService.getLibro(id).isPresent()) {
-            String errMsg = String.format("Il libro con codice %s non è stato trovato!", id);
+            String errMsg = String.format("Il libro con codice %s non e stato trovato!", id);
             throw new NotFoundException(errMsg);
         }
 
@@ -94,7 +94,7 @@ public class LibroController {
     public ResponseEntity<LibroDTO> searchByIsbn(@PathVariable("isbn") String isbn) throws NotFoundException {
 
         if (!libroService.getLibroByIsbn(isbn).isPresent()) {
-            String errMsg = String.format("Il libro con isbn %s non è stato trovato!", isbn);
+            String errMsg = String.format("Il libro con isbn %s non e stato trovato!", isbn);
             throw new NotFoundException(errMsg);
         }
 
@@ -177,7 +177,7 @@ public class LibroController {
         return new ResponseEntity<List<CountGenresDTO>>(genres, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Inserisce un libro se non è presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request")
+    @ApiOperation(value = "Inserisce un libro se non e presente nel DB", notes = "I dati dell'autore vengono prelevati dal body della request")
     @ApiResponses(value = { @ApiResponse(code = 201, message = "Libro inserito nel DB"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @PostMapping(value = "/add")
@@ -210,7 +210,7 @@ public class LibroController {
         Libro libro = libroDtoToLibro.convertWithId(libroDTO);
 
         if (!libroService.getLibro(libro.getId()).isPresent()) {
-            String errMsg = String.format("Il libro con codice %s non è stato trovato!", libro.getId());
+            String errMsg = String.format("Il libro con codice %s non e stato trovato!", libro.getId());
             throw new NotFoundException(errMsg);
         }
 
@@ -220,14 +220,14 @@ public class LibroController {
 
     }
 
-    @ApiOperation(value = "Elimina un libro tramite id", notes = "L'eliminazione va a buon fine solo se il libro è presente sul DB", response = LibroDTO.class, produces = "application/json")
+    @ApiOperation(value = "Elimina un libro tramite id", notes = "L'eliminazione va a buon fine solo se il libro e presente sul DB", response = LibroDTO.class, produces = "application/json")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
             @ApiResponse(code = 400, message = "Errore generico") })
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<LibroDTO> deleteLibro(@PathVariable Integer id) throws NotFoundException {
 
         if (!libroService.getLibro(id).isPresent()) {
-            String errMsg = String.format("Il libro con codice %s non è stato trovato!", id);
+            String errMsg = String.format("Il libro con codice %s non e stato trovato!", id);
             throw new NotFoundException(errMsg);
         }
 
