@@ -7,6 +7,7 @@ import it.elearnpath.siav.libreria.exception.BindingException;
 import it.elearnpath.siav.libreria.exception.NotFoundException;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,11 @@ public class AutoreServiceImpl implements AutoreService {
         autoreExample.setNome(name);
         autoreExample.setCognome(surname);
 
-        List<Autore> autori = autoreRepository.findAll(Example.of(autoreExample));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("nome", nome -> nome.ignoreCase().contains())
+                .withMatcher("cognome", cognome -> cognome.ignoreCase().contains());
+
+        List<Autore> autori = autoreRepository.findAll(Example.of(autoreExample, matcher));
         List<AutoreDTO> autoriDTO = new ArrayList<>();
 
         autoriDTO = autori.stream()

@@ -4,7 +4,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.elearnpath.siav.registry.dto.ReaderDTO;
+import it.elearnpath.siav.registry.entity.LibraryCard;
 import it.elearnpath.siav.registry.exception.BadRequestException;
+import it.elearnpath.siav.registry.service.LibraryCardService;
 import it.elearnpath.siav.registry.service.ReaderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,11 @@ import java.util.List;
 public class ReaderController {
 
     private final ReaderService readerService;
+    private final LibraryCardService libraryCardService;
 
-    public ReaderController(ReaderService readerService) {
+    public ReaderController(ReaderService readerService, LibraryCardService libraryCardService) {
         this.readerService = readerService;
+        this.libraryCardService = libraryCardService;
     }
 
     @ApiOperation(
@@ -125,4 +129,5 @@ public class ReaderController {
         return new ResponseEntity(HttpStatus.OK);
 
     }
+
 }

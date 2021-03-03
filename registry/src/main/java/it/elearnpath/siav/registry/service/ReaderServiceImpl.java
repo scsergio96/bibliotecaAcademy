@@ -2,6 +2,7 @@ package it.elearnpath.siav.registry.service;
 
 import it.elearnpath.siav.registry.converter.ReaderConverter;
 import it.elearnpath.siav.registry.dto.ReaderDTO;
+import it.elearnpath.siav.registry.entity.LibraryCard;
 import it.elearnpath.siav.registry.entity.Reader;
 import it.elearnpath.siav.registry.exception.BadRequestException;
 import it.elearnpath.siav.registry.repository.ReaderRepository;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class ReaderServiceImpl implements ReaderService{
 
     private final ReaderRepository readerRepository;
+    private final LibraryCardService libraryCardService;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository){
+    public ReaderServiceImpl(ReaderRepository readerRepository, LibraryCardService libraryCardService){
         this.readerRepository = readerRepository;
+        this.libraryCardService = libraryCardService;
     }
 
     /**
@@ -51,7 +54,7 @@ public class ReaderServiceImpl implements ReaderService{
     public List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber) {
         Reader readerExample = new Reader();
         readerExample.setId(id);
-        readerExample.setCardNumber(cardNumber);
+//        readerExample.setCardNumber(cardNumber);
 
         List<Reader> readers = readerRepository.findAll(Example.of(readerExample));
         List<ReaderDTO> readerDTOs = new ArrayList<>();
@@ -91,6 +94,13 @@ public class ReaderServiceImpl implements ReaderService{
         if (readerDTO.getId() != null) {
             throw new BadRequestException("The reader id should not be passed or must be null");
         }
+
+        if (readerDTO.getCardNumber() != null) {
+            throw new BadRequestException("The card number should not be passed or must be null");
+        }
+
+        LibraryCard libraryCard = libraryCardService.createNewValidCard();
+        readerDTO.setCardNumber(libraryCard.getId());
 
         Reader savedReader = saveReader(readerDTO);
 
