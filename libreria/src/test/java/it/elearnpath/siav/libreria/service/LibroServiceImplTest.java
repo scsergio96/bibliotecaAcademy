@@ -71,8 +71,8 @@ public class LibroServiceImplTest {
         libro.setRistampa(1);
         libro.setDescrizione("Descrizione");
         libro.setLingua("Italiano");
-        libro.setPrimaEdizione("2000-10-10");
-        libro.setUltimaRistampa("2010-10-10");
+        // libro.setPrimaEdizione("2000-10-10");
+        // libro.setUltimaRistampa("2010-10-10");
         libro.setAvailable(true);
         libro.setCasaEditrice(casaEditrice);
         libro.setPosizioneBiblioteca(scaffale);
@@ -125,8 +125,8 @@ public class LibroServiceImplTest {
         autore.setId(1);
         autore.setNome("nome");
         autore.setCognome("cognome");
-//        autore.setDataNascita("2020-10-10");
-//        autore.setDataMorte("2010-10-09");
+        // autore.setDataNascita("2020-10-10");
+        // autore.setDataMorte("2010-10-09");
         autore.setNazionalita("italiana");
         autore.setBiografia("biografia di prova");
 
@@ -140,8 +140,8 @@ public class LibroServiceImplTest {
         libro.setRistampa(1);
         libro.setDescrizione("Descrizione");
         libro.setLingua("Italiano");
-        libro.setPrimaEdizione("2000-10-10");
-        libro.setUltimaRistampa("2010-10-10");
+        // libro.setPrimaEdizione("2000-10-10");
+        // libro.setUltimaRistampa("2010-10-10");
         libro.setAvailable(true);
         libro.setCasaEditrice(casaEditrice);
         libro.setPosizioneBiblioteca(scaffale);

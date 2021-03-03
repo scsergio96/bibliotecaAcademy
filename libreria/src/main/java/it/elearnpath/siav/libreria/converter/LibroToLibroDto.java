@@ -13,14 +13,19 @@ import it.elearnpath.siav.libreria.entity.Libro;
 public class LibroToLibroDto {
 
     public LibroDTO convert(Libro libro) {
+
+        if (libro == null) {
+            return null;
+        }
+
         final LibroDTO libroDTO = new LibroDTO();
 
         libroDTO.setId(libro.getId());
         libroDTO.setIsbn(libro.getIsbn());
         libroDTO.setTitolo(libro.getTitolo());
         libroDTO.setPagine(libro.getPagine());
-        libroDTO.setPrimaPubblicazione(convertDate(libro.getPrimaEdizione()));
-        libroDTO.setUltimaStampa(convertDate(libro.getUltimaRistampa()));
+        libroDTO.setPrimaPubblicazione(convertDateToString(libro.getPrimaEdizione()));
+        libroDTO.setUltimaStampa(convertDateToString(libro.getUltimaRistampa()));
         libroDTO.setDescrizione(libro.getDescrizione());
         libroDTO.setCasaEditrice(libro.getCasaEditrice().getRagioneSociale());
         libroDTO.setGenere(libro.getGenere());
@@ -37,13 +42,12 @@ public class LibroToLibroDto {
         return libroDTO;
     }
 
-    public String convertDate(Date date) {
-        String pattern = "yyyy-MM-dd";
-
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        String dateString = format.format(date);
-
-        return dateString;
+    private static String convertDateToString(Date date) {
+        if (date != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return simpleDateFormat.format(date).toString();
+        } else
+            return null;
     }
 
 }

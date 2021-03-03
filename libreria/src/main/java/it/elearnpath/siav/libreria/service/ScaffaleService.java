@@ -7,7 +7,7 @@ import it.elearnpath.siav.libreria.entity.Scaffale;
 
 public interface ScaffaleService {
 
-   List<Scaffale> findAll();
+   List<ScaffaleDTO> findAll(Integer pageNo, Integer pageSize, String sortBy);
 
    ScaffaleDTO findById(Integer id);
 

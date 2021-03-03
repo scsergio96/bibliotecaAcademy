@@ -1,5 +1,6 @@
 package it.elearnpath.siav.libreria.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,11 @@ import it.elearnpath.siav.libreria.entity.Scaffale;
 import it.elearnpath.siav.libreria.repository.ScaffaleRepository;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @Service
 public class ScaffaleServiceImpl implements ScaffaleService {
 
@@ -19,10 +25,26 @@ public class ScaffaleServiceImpl implements ScaffaleService {
    @Autowired
    private ScaffaleRepository scaffaleRepository;
 
-   @Override
-   public List<Scaffale> findAll() {
+   private <D, T> Page<D> mapEntityPageIntoDtoPage(Page<T> entities, Class<D> dtoClass) {
+         return entities.map(objectEntity -> modelMapper.map(objectEntity, dtoClass));
+   } 
 
-      return scaffaleRepository.findAll();
+   @Override
+   public List<ScaffaleDTO> findAll(Integer pageNo, Integer pageSize, String sortBy) {
+
+      Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+      Page<Scaffale> scaffaleList = scaffaleRepository.findAll(paging);
+
+      Page<ScaffaleDTO> scaffaleDTOList = mapEntityPageIntoDtoPage(scaffaleList, ScaffaleDTO.class);
+
+      if(scaffaleDTOList.hasContent()){
+         return scaffaleDTOList.getContent();
+      }else{
+         return new ArrayList<ScaffaleDTO>();
+      }
+
+      //return scaffaleRepository.findAll();
 
    }
 
@@ -55,6 +77,7 @@ public class ScaffaleServiceImpl implements ScaffaleService {
 
    @Override
    public Scaffale findByNumeroAndRipiano(Integer numero, Integer posizione) {
+      
       Scaffale scaffale = scaffaleRepository.findByNumeroAndRipiano(numero, posizione);
 
       if (scaffale == null) {
