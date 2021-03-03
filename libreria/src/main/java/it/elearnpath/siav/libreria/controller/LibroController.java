@@ -112,11 +112,10 @@ public class LibroController {
         public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
                         throws NotFoundException {
 
-                
                 List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
                                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
 
-                if(libri.size()==0) {
+                if (libri.size() == 0) {
                         String errMsg = String.format("Non sono stati trovati libri con titolo %s", titolo);
                         throw new NotFoundException(errMsg);
                 }
@@ -136,6 +135,11 @@ public class LibroController {
                 List<LibroDTO> libri = (libroService.getLibriByGenere(genere)).stream()
                                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
 
+                if (libri.size() == 0) {
+                        String errMsg = String.format("Non sono stati trovati libri con genere %s", genere);
+                        throw new NotFoundException(errMsg);
+                }
+
                 return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
         }
@@ -149,6 +153,11 @@ public class LibroController {
 
                 List<LibroDTO> libri = (libroService.getLibriByAutore(autore)).stream()
                                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+                if (libri.size() == 0) {
+                        String errMsg = String.format("Non sono stati trovati libri con autore %s", autore);
+                        throw new NotFoundException(errMsg);
+                }
 
                 return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
 
@@ -181,8 +190,15 @@ public class LibroController {
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
                         @ApiResponse(code = 400, message = "Errore generico") })
         @GetMapping(value = "/genres")
-        public ResponseEntity<List<String>> showGenres() {
+        public ResponseEntity<List<String>> showGenres() throws NotFoundException {
+
                 List<String> genres = libroService.getGenres();
+                
+                if (genres.size() == 0) {
+                        String errMsg = String.format("Non sono stati trovati genere");
+                        throw new NotFoundException(errMsg);
+                }
+                
                 return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
         }
 
@@ -190,9 +206,14 @@ public class LibroController {
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
                         @ApiResponse(code = 400, message = "Errore generico") })
         @GetMapping(value = "/genres/num")
-        public ResponseEntity<List<CountGenresDTO>> numGenres() {
+        public ResponseEntity<List<CountGenresDTO>> numGenres() throws NotFoundException {
 
                 List<CountGenresDTO> genres = libroService.getNumGenre();
+
+                if (genres.size() == 0) {
+                        String errMsg = String.format("Non sono stati trovati libri");
+                        throw new NotFoundException(errMsg);
+                }
 
                 return new ResponseEntity<List<CountGenresDTO>>(genres, HttpStatus.OK);
         }

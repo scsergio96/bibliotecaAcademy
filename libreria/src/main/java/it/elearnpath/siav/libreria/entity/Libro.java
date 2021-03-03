@@ -3,14 +3,12 @@ package it.elearnpath.siav.libreria.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -144,34 +142,13 @@ public class Libro {
         return primaEdizione;
     }
 
-    public void setPrimaEdizione(String primaEdizione) {
-        String pattern = "yyyy-MM-dd";
 
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            Date date = simpleDateFormat.parse(primaEdizione);
-            this.primaEdizione = date;
-        } catch (Exception e) {
-            // TODO: Creare error DateFormatException
-            e.getMessage();
-        }
-    }
 
     public Date getUltimaRistampa() {
         return ultimaRistampa;
     }
 
-    public void setUltimaRistampa(String ultimaRistampa) {
-        String pattern = "yyyy-MM-dd";
-
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            Date date = simpleDateFormat.parse(ultimaRistampa);
-            this.ultimaRistampa = date;
-        } catch (Exception e) {
-            // TODO: Creare error DateFormatException
-            e.getMessage();
-        }    }
+   
 
     public Scaffale getPosizioneBiblioteca() {
         return posizioneBiblioteca;
@@ -203,6 +180,14 @@ public class Libro {
 
     public void setAvailable(Boolean available) {
         isAvailable = available;
+    }
+
+    public void setPrimaEdizione(Date primaEdizione) {
+        this.primaEdizione = primaEdizione;
+    }
+
+    public void setUltimaRistampa(Date ultimaRistampa) {
+        this.ultimaRistampa = ultimaRistampa;
     }
 
 }
