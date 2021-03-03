@@ -48,14 +48,15 @@ public class AutoreConverter {
     }
 
     private static String converterDateToString(Date date) {
-        if(date != null) {
+        if (date != null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             return simpleDateFormat.format(date).toString();
-        } else return null;
+        } else
+            return null;
     }
 
     private static Date converterStringToDate(String date) {
-        if(date != "" && date != null) {
+        if (date != "" && date != null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 return simpleDateFormat.parse(date);
@@ -63,7 +64,8 @@ public class AutoreConverter {
                 e.printStackTrace();
                 return null;
             }
-        } else return null;
+        } else
+            return null;
     }
 
 }

@@ -1,5 +1,8 @@
 package it.elearnpath.siav.libreria.converter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +36,9 @@ public class LibroDtoToLibro {
         }
 
         List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
-        .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
-        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(),libroDTO.getRipiano());
+        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano());
 
         final Libro libro = new Libro();
 
@@ -43,8 +46,8 @@ public class LibroDtoToLibro {
         libro.setIsbn(libroDTO.getIsbn());
         libro.setTitolo(libroDTO.getTitolo());
         libro.setPagine(libroDTO.getPagine());
-        libro.setPrimaEdizione(libroDTO.getPrimaPubblicazione());
-        libro.setUltimaRistampa(libroDTO.getUltimaStampa());
+        libro.setPrimaEdizione(convertStringToDate(libroDTO.getPrimaPubblicazione()));
+        libro.setUltimaRistampa(convertStringToDate(libroDTO.getUltimaStampa()));
         libro.setDescrizione(libroDTO.getDescrizione());
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
@@ -55,7 +58,6 @@ public class LibroDtoToLibro {
 
         return libro;
 
-
     }
 
     public Libro convertWithId(LibroDTO libroDTO) {
@@ -65,9 +67,9 @@ public class LibroDtoToLibro {
         }
 
         List<Autore> autori = libroDTO.getIdAutore().stream().map(id -> autoreRepository.findById(id).get())
-        .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
-        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(),libroDTO.getRipiano());
+        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(libroDTO.getPosizione(), libroDTO.getRipiano());
 
         final Libro libro = new Libro();
 
@@ -75,8 +77,8 @@ public class LibroDtoToLibro {
         libro.setIsbn(libroDTO.getIsbn());
         libro.setTitolo(libroDTO.getTitolo());
         libro.setPagine(libroDTO.getPagine());
-        libro.setPrimaEdizione(libroDTO.getPrimaPubblicazione());
-        libro.setUltimaRistampa(libroDTO.getUltimaStampa());
+        libro.setPrimaEdizione(convertStringToDate(libroDTO.getPrimaPubblicazione()));
+        libro.setUltimaRistampa(convertStringToDate(libroDTO.getUltimaStampa()));
         libro.setDescrizione(libroDTO.getDescrizione());
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
@@ -88,6 +90,19 @@ public class LibroDtoToLibro {
 
         return libro;
 
+    }
+
+    private static Date convertStringToDate(String date) {
+        if (date != "" && date != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                return simpleDateFormat.parse(date);
+            } catch (ParseException e) {
+                e.getMessage();
+                return null;
+            }
+        } else
+            return null;
     }
 
 }
