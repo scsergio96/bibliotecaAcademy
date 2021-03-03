@@ -113,7 +113,7 @@ public class CasaEditriceController {
             throw new Exception("fornire una ragione sociale");
         }
 
-        CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchByRagSociale(ragSoc + "%");
+        CasaEditriceDTO casaEditriceDTO = casaEditriceService.searchByRagSociale(ragSoc);
 
         if(casaEditriceDTO == null){
             throw new NotFoundException("Non è presente alcuna casa editrice che abbia questa ragione sociale " + ragSoc);
@@ -192,7 +192,6 @@ public class CasaEditriceController {
         if(bindingResult.hasErrors()){
 
             String errMsg = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale()); 
-
 
             throw new BindingException(errMsg);
         }
