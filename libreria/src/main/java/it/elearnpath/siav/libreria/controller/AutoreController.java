@@ -53,7 +53,7 @@ public class AutoreController {
             value = "Ricerca autori per id, nome e/o cognome. Ritorna una lista vuota se la ricerca non ha successo",
             notes = "La ricerca viene effettuata tramite query string (campi opzionali). L'ordine di inserimento" +
                     "è ininfluente. \n" +
-                    "Esempio: /authors/search/all/0?id=1&nome=pippo&cognome=baudo",
+                    "Esempio: /authors/search?id=1&nome=pippo&cognome=baudo",
             response = AutoreDTO.class,
             responseContainer = "List",
             produces = "application/json")
