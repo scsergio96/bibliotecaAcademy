@@ -84,7 +84,7 @@ public class ScaffaleController {
         produces = "application/json"
     )
     @ApiResponses(value = {
-        @ApiResponse(code=200, message ="Tutto bene"),
+        @ApiResponse(code = 200, message = "Tutto bene"),
         @ApiResponse(code = 404, message = "Elemento non trovato")
     })
     @GetMapping("/search/{id}")
@@ -110,7 +110,7 @@ public class ScaffaleController {
         produces = "application/json"
     )
     @ApiResponses(value = {
-        @ApiResponse(code=201, message ="Elemento inserito correttamente"),
+        @ApiResponse(code = 201, message = "Elemento inserito correttamente"),
         @ApiResponse(code = 406, message = "Elemento duplicato")
     })
     @PostMapping("/add")
@@ -192,8 +192,9 @@ public class ScaffaleController {
         produces = "application/json"
     )
     @ApiResponses(value = {
-        @ApiResponse(code=201, message ="Elemento aggiornato correttamente"),
-        @ApiResponse(code = 404, message = "Elemento non presente")
+        @ApiResponse(code = 201, message = "Elemento aggiornato correttamente"),
+        @ApiResponse(code = 404, message = "Elemento non presente"),
+        @ApiResponse(code = 406, message = "Elemento duplicato") 
     })
     @PutMapping("/update")
     public ResponseEntity<ScaffaleDTO> updateScafale(@RequestBody ScaffaleDTO scaffaleDTO) throws NotFoundException,
@@ -235,7 +236,7 @@ public class ScaffaleController {
         produces = "application/json"
     )
     @ApiResponses(value = {
-        @ApiResponse(code=200, message ="Elemento cancellato correttamente"),
+        @ApiResponse(code = 200, message = "Elemento cancellato correttamente"),
         @ApiResponse(code = 404, message = "Elemento non presente")
     })
     @DeleteMapping("/delete/{id}")
