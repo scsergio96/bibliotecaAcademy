@@ -219,7 +219,7 @@ public class CasaEditriceController {
     @ApiResponses(value = 
                         { @ApiResponse(code = 201, message = "Elemento aggiornato correttamente"),
                           @ApiResponse(code = 404, message = "Elemento non presente"), 
-                          @ApiResponse(code = 400, message = "Errore generico")})
+                          @ApiResponse(code = 406, message = "Elemento duplicato")})
     @PutMapping(value = "/update")
     public ResponseEntity<CasaEditriceDTO> updateElement(@Valid @RequestBody CasaEditriceDTO casaEditriceDTO, BindingResult bindingResult) throws Exception {
 
@@ -247,7 +247,7 @@ public class CasaEditriceController {
             return new ResponseEntity<CasaEditriceDTO>(HttpStatus.CREATED);
 
         }else{
-            throw new Exception("Questa partita iva è gia presente");
+            throw new DuplicateException("Questa partita iva è gia presente");
         }
         
     }
