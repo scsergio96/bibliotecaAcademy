@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpHeaders;
 import java.net.BindException;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -91,7 +90,8 @@ public class ScaffaleController {
     @GetMapping("/search/{id}")
     public ResponseEntity<ScaffaleDTO> findById(@PathVariable Integer id) throws NotFoundException {
 
-        ScaffaleDTO scaffaleDTO = modelMapper.map(scaffaleService.findById(id), ScaffaleDTO.class);
+
+        ScaffaleDTO scaffaleDTO = scaffaleService.findById(id);
 
         if(scaffaleDTO == null){
             throw new NotFoundException("Non è presente alcun elemento con questo id " + id);
@@ -100,6 +100,9 @@ public class ScaffaleController {
         return new ResponseEntity<ScaffaleDTO>(scaffaleDTO, HttpStatus.OK);
 
     }
+    
+    
+    
     @ApiOperation(
         value = "Inserimento di un scaffale se non presente nel DB",
         notes = "I dati sono ritornati in formato JSON",
@@ -111,7 +114,7 @@ public class ScaffaleController {
         @ApiResponse(code = 406, message = "Elemento duplicato")
     })
     @PostMapping("/add")
-    public ResponseEntity<ScaffaleDTO> inseriscoScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult)
+    public ResponseEntity<ScaffaleDTO> insertScaffale(@RequestBody @Valid ScaffaleDTO scaffaleDTO, BindingResult bindingResult)
             throws DuplicateException, BindException {
 
         if (bindingResult.hasErrors()) {
@@ -148,6 +151,40 @@ public class ScaffaleController {
 
 
 
+//   @ApiOperation(
+//       value = "Aggiornamento di una casa editrice se presente in DB",
+//       notes = "I dati sono ritornati in formato JSON",
+//       response = ScaffaleDTO.class,
+//       produces = "application/json"
+//   )
+//   @ApiResponses(value = {
+//       @ApiResponse(code=201, message ="Elemento aggiornato correttamente"),
+//       @ApiResponse(code = 404, message = "Elemento non presente")
+//   })
+//   @PutMapping("/update")
+//   public ResponseEntity<ScaffaleDTO> updateScafale(@RequestBody ScaffaleDTO scaffaleDTO) throws NotFoundException {
+//
+//       HttpHeaders headers = new HttpHeaders();
+//       ObjectMapper mapper = new ObjectMapper();
+//
+//       headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//       int i = scaffaleDTO.getId();
+//
+//       if (scaffaleService.findById(i) != null) {
+//           scaffaleService.save(scaffaleDTO);
+//       }else{
+//           throw new NotFoundException("Scaffale non presente");
+//       }
+//
+//       ObjectNode responseNode = mapper.createObjectNode();
+//
+//       responseNode.put("code", HttpStatus.OK.toString());
+//       responseNode.put("message", "Eseguita Con Successo");
+//
+//       return new ResponseEntity<ScaffaleDTO>(headers, HttpStatus.CREATED);
+//   }
+
     @ApiOperation(
         value = "Aggiornamento di una casa editrice se presente in DB",
         notes = "I dati sono ritornati in formato JSON",
@@ -159,7 +196,8 @@ public class ScaffaleController {
         @ApiResponse(code = 404, message = "Elemento non presente")
     })
     @PutMapping("/update")
-    public ResponseEntity<?> updateScafale(@RequestBody ScaffaleDTO scaffaleDTO) throws NotFoundException {
+    public ResponseEntity<ScaffaleDTO> updateScafale(@RequestBody ScaffaleDTO scaffaleDTO) throws NotFoundException,
+            DuplicateException {
 
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper mapper = new ObjectMapper();
@@ -168,18 +206,24 @@ public class ScaffaleController {
 
         int i = scaffaleDTO.getId();
 
-        if (scaffaleService.findById(i) != null) {
-            scaffaleService.save(scaffaleDTO);
-        }else{
+        if (scaffaleService.findById(i) == null) {
             throw new NotFoundException("Scaffale non presente");
         }
 
-        ObjectNode responseNode = mapper.createObjectNode();
+        Scaffale scaffale = scaffaleService.findByNumeroAndRipiano(scaffaleDTO.getNumero(), scaffaleDTO.getRipiano());
 
-        responseNode.put("code", HttpStatus.OK.toString());
-        responseNode.put("message", "Eseguita Con Successo");
+        if(scaffale.getId() == -1 || (scaffale != null && scaffaleDTO.getId() == scaffale.getId())) {
+            scaffaleService.save(scaffaleDTO);
 
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            ObjectNode responseNode = mapper.createObjectNode();
+
+            responseNode.put("code", HttpStatus.OK.toString());
+            responseNode.put("message", "Eseguita Con Successo");
+    
+            return new ResponseEntity<ScaffaleDTO>(headers, HttpStatus.CREATED);
+        }else{
+            throw new DuplicateException("scaffale gia presente");
+        }
     }
 
 
