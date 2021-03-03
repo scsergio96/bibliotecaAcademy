@@ -72,7 +72,7 @@ public class CasaEditriceServiceImplTest {
         CasaEditriceDTO search = service.searchById(id);
 
         assertEquals(search, toDTO.convert(casaEditrice));
-        verify(repository, times(1)).findById(anyInt());
+        verify(repository, times(1)).findById(id);
 
     }
 
