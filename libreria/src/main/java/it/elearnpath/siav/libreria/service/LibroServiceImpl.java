@@ -76,6 +76,8 @@ public class LibroServiceImpl implements LibroService {
         return libroRepository.findAllByTitoloContainingIgnoreCase(titolo);
     }
 
+   
+
     // @Override
     // public List<String> getNumGenre() {
     //     List<String> numGenre = libroRepository.getNumForGenres();
@@ -94,8 +96,8 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public List<Libro> getLibriByGenere(String genere) {        
-        return libroRepository.findAllByGenereIgnoreCase(genere);
+    public List<Libro> getLibriByGenere(Integer id) {        
+        return libroRepository.findAllByGenere(id);
     }
   
     @Override

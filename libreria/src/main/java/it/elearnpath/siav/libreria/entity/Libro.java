@@ -27,9 +27,10 @@ public class Libro {
     @Size(min = 1, max = 100)
     private String titolo;
 
-    @NotNull
-    @Size(min = 1, max = 50)
-    private String genere;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "genere", referencedColumnName = "id")
+    @JsonBackReference(value = "genere-libro")
+    private Genere genere;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "casaEditrice", referencedColumnName = "id")
@@ -88,13 +89,6 @@ public class Libro {
         this.titolo = titolo;
     }
 
-    public String getGenere() {
-        return genere;
-    }
-
-    public void setGenere(String genere) {
-        this.genere = genere;
-    }
 
     public CasaEditrice getCasaEditrice() {
         return casaEditrice;
@@ -188,6 +182,14 @@ public class Libro {
 
     public void setUltimaRistampa(Date ultimaRistampa) {
         this.ultimaRistampa = ultimaRistampa;
+    }
+
+    public Genere getGenere() {
+        return genere;
+    }
+
+    public void setGenere(Genere genere) {
+        this.genere = genere;
     }
 
 }

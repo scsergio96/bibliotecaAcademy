@@ -19,22 +19,18 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     @Query(value = "SELECT genere FROM biblioteca.libro group by genere", nativeQuery = true)
     public List<String> getAllGenres();
 
-    // @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
-    // public List<String> getNumForGenres();
-
     @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
     public List<String> getNumForGenres();
+
+    // @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
+    // public List<String> getNumForGenres();
 
     public Optional<Libro> findByIsbnLike(String isbn);
 
     public List<Libro> findAllByTitoloContainingIgnoreCase(String titolo);
 
-    public List<Libro> findAllByGenereIgnoreCase(String genere);
-
-    // public List<Libro> findAllByAutori_idAutore(Integer id);
-
-    // @Query(value = "select distinct libro from Libro libro join libro.autori autori join autore.libri libri where libri.id = :id")
-    // public List<Libro> prova()
+    @Query(value = "SELECT * FROM biblioteca.libro where genere=:id", nativeQuery = true)
+    public List<Libro> findAllByGenere(@Param ("id") Integer id);
 
     @Query(value = "SELECT libro.id,isbn,titolo,genere,pagine,ristampa,descrizione,lingua,primaEdizione,ultimaRistampa,casaEditrice,posizioneBiblioteca,isAvailable from autore_libro inner join libro on autore_libro.idLibro = libro.id inner join autore on autore_libro.idAutore = autore.id where autore.id=:id" , nativeQuery = true)
     public List<Libro> findAllLibroByAutore(@Param("id") Integer id);

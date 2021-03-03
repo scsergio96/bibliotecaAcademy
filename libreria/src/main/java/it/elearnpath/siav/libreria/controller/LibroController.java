@@ -129,7 +129,7 @@ public class LibroController {
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
                         @ApiResponse(code = 400, message = "Errore generico") })
         @GetMapping(value = "/search/genere/{genere}")
-        public ResponseEntity<List<LibroDTO>> searchAllByGenere(@PathVariable("genere") @Valid String genere)
+        public ResponseEntity<List<LibroDTO>> searchAllByGenere(@PathVariable("genere") @Valid Integer genere)
                         throws NotFoundException {
 
                 List<LibroDTO> libri = (libroService.getLibriByGenere(genere)).stream()
@@ -186,6 +186,7 @@ public class LibroController {
 
         // }
 
+        @Deprecated
         @ApiOperation(value = "Restituisce una lista di generi", response = List.class, produces = "application/json")
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
                         @ApiResponse(code = 400, message = "Errore generico") })
