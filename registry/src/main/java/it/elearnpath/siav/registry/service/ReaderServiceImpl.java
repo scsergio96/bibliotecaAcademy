@@ -54,7 +54,7 @@ public class ReaderServiceImpl implements ReaderService{
     public List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber) {
         Reader readerExample = new Reader();
         readerExample.setId(id);
-//        readerExample.setCardNumber(cardNumber);
+        readerExample.setCardNumber(cardNumber);
 
         List<Reader> readers = readerRepository.findAll(Example.of(readerExample));
         List<ReaderDTO> readerDTOs = new ArrayList<>();
@@ -66,19 +66,19 @@ public class ReaderServiceImpl implements ReaderService{
         return readerDTOs;
     }
 
-//    @Override
-//    public ReaderDTO findReaderById(Integer id){
-//
-//        Optional<Reader> readerOptional = readerRepository.findById(id);
-//
-//        if (readerOptional.isPresent()) {
-//            ReaderDTO readerDTO = ReaderConverter.convert(readerOptional.get());
-//
-//            return readerDTO;
-//        }else{
-//            return null;
-//        }
-//    }
+    @Override
+    public ReaderDTO findReaderById(Integer id){
+
+        Optional<Reader> readerOptional = readerRepository.findById(id);
+
+        if (readerOptional.isPresent()) {
+            ReaderDTO readerDTO = ReaderConverter.convert(readerOptional.get());
+
+            return readerDTO;
+        }else{
+            return null;
+        }
+    }
 
 
     /**
@@ -126,7 +126,7 @@ public class ReaderServiceImpl implements ReaderService{
         }
 
         if (oldReader.isPresent()) {
-            Reader reader = ReaderConverter.convert(readerDTO);
+            Reader reader = ReaderConverter.convertWithId(readerDTO);
             Reader savedReader = readerRepository.save(reader);
             return ReaderConverter.convert(savedReader);
         } else {

@@ -36,7 +36,7 @@ public class LibroDTO {
     private String descrizione;
 
     private String casaEditrice;
-    
+  
     private GenereDTO genere;
 
     private Integer ristampa;

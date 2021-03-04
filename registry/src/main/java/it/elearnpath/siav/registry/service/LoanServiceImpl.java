@@ -72,14 +72,15 @@ public class LoanServiceImpl implements LoanService{
             throw new BadRequestException("Loan id cannot be null");
         }
 
-        // TODO test actual functionality
         if (oldLoan.isPresent()) {
             if (oldLoan.get().getEnd() == null && loan.getEnd() != null) {
                 BookDTO bookDTO = libraryService.searchBookById(loan.getIdBook());
-                libraryService.switchBookIsAvailable(bookDTO);
+                libraryService.setBookIsAvailableTrue(bookDTO);
+                loanRepository.save(loan);
+                return LoanConverter.convert(loan);
+            } else {
+                throw new BadRequestException("Changing a closed loan is forbidden");
             }
-            loanRepository.save(loan);
-            return LoanConverter.convert(loan);
         } else {
             throw new BadRequestException("Loan not present in the repository");
         }
@@ -98,6 +99,34 @@ public class LoanServiceImpl implements LoanService{
         return loanRepository.save(loan);
     }
 
+
+//    @Override
+//    public LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException {
+//
+//        if (loanDTO.getEnd() != null) {
+//            throw new BadRequestException("The end date should not be present or must be null");
+//        }
+//
+//        Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
+//        BookDTO bookDTO = bookId.map(libraryService::searchBookById)
+//                .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
+//
+//        Optional<Integer> cardNumber = Optional.ofNullable(loanDTO.getCardNumber());
+//        ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
+//                .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
+//
+//        // TODO use the converter to return the saved Loan
+//        if (bookDTO.getIsAvailable()) {
+//            loanDTO.setIdReader(readerDTO.getId());
+//            Loan loan = save(loanDTO);
+//            loanDTO.setId(loan.getId());
+//            libraryService.setBookIsAvailableFalse(bookDTO);
+//            return loanDTO;
+//        } else {
+//            throw new BadRequestException("The book is not currently available");
+//        }
+//    }
+
     /**
      * Method to insert a valid Loan in the database.
      * Check if the reader (id) is present. Call the library service to check if the book is present and available.
@@ -111,25 +140,46 @@ public class LoanServiceImpl implements LoanService{
      * present in the DB, the book is not available.
      */
     @Override
-    public LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException {
+    public LoanDTO insertLoanByValidReaderIdAndBookId(LoanDTO loanDTO) throws BadRequestException {
+
+        if (loanDTO.getEnd() != null) {
+            throw new BadRequestException("The end date should not be present or must be null");
+        }
 
         Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
         BookDTO bookDTO = bookId.map(libraryService::searchBookById)
                 .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
 
-        Optional<Integer> cardNumber = Optional.ofNullable(loanDTO.getCardNumber());
-        ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
-                .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
+        Optional<Integer> readerId = Optional.ofNullable(loanDTO.getIdReader());
+        ReaderDTO readerDTO = readerId.map(readerService::findReaderById)
+                .orElseThrow(() -> new BadRequestException("Reader id missing or not present in the database"));
 
-        // TODO use the converter to return the saved Loan
         if (bookDTO.getIsAvailable()) {
-            loanDTO.setIdReader(readerDTO.getId());
             Loan loan = save(loanDTO);
-            loanDTO.setId(loan.getId());
-            libraryService.switchBookIsAvailable(bookDTO);
-            return loanDTO;
+            libraryService.setBookIsAvailableFalse(bookDTO);
+            return LoanConverter.convert(loan);
         } else {
             throw new BadRequestException("The book is not currently available");
+        }
+    }
+
+    @Override
+    public LoanDTO searchPendingLoanByBookId(Integer idBook) throws BadRequestException {
+
+        List<LoanDTO> loanDTOs = searchByReaderIdBookId(null, idBook);
+
+        List<LoanDTO> openedLoansDTO = loanDTOs.stream()
+                .filter(loanDTO -> loanDTO.getEnd() == null)
+                .collect(Collectors.toList());
+
+        openedLoansDTO.forEach(System.out::println);
+
+        if (openedLoansDTO.size() == 1) {
+            return openedLoansDTO.get(0);
+        } else if (openedLoansDTO.size() == 0) {
+            throw new BadRequestException("The book is not currently pending in the loans list");
+        } else {
+            throw new BadRequestException("Fatal Error: the same book has been rented many times");
         }
     }
 }

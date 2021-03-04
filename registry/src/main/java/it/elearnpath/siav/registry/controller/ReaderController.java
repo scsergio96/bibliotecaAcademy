@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.elearnpath.siav.registry.dto.ReaderDTO;
-import it.elearnpath.siav.registry.entity.LibraryCard;
 import it.elearnpath.siav.registry.exception.BadRequestException;
 import it.elearnpath.siav.registry.service.LibraryCardService;
 import it.elearnpath.siav.registry.service.ReaderService;

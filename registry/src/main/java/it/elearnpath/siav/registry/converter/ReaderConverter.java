@@ -41,17 +41,9 @@ public class ReaderConverter {
 
     public static Reader convertWithId(ReaderDTO readerDTO){
 
-        if(readerDTO == null){
-            return null;
-        }
-
-        final Reader reader = new Reader();
-
+        Reader reader;
+        reader = convert(readerDTO);
         reader.setId(readerDTO.getId());
-        reader.setCardNumber(readerDTO.getCardNumber());
-        reader.setName(readerDTO.getName());
-        reader.setSurname(readerDTO.getSurname());
-        reader.setAddress(readerDTO.getAddress());
 
         return reader;
     }

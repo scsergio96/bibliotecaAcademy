@@ -25,13 +25,25 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public Boolean switchBookIsAvailable(BookDTO bookDTO) {
+    public Boolean setBookIsAvailableFalse(BookDTO bookDTO) {
         String url = "http://localhost:8080/books/update";
 
-        bookDTO.setIsAvailable(!bookDTO.getIsAvailable());
+        bookDTO.setIsAvailable(false);
 
         restTemplate.put(url, bookDTO);
 
         return bookDTO.getIsAvailable();
+    }
+
+    @Override
+    public Boolean setBookIsAvailableTrue(BookDTO bookDTO) {
+        String url = "http://localhost:8080/books/update";
+
+        bookDTO.setIsAvailable(true);
+
+        restTemplate.put(url, bookDTO);
+
+        return bookDTO.getIsAvailable();
+
     }
 }
