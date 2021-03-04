@@ -8,7 +8,7 @@ public interface ReaderService {
 
     List<ReaderDTO> getAllReaders();
 
-//    ReaderDTO findReaderById(Integer id);
+    ReaderDTO findReaderById(Integer id);
 
     ReaderDTO findByCardNumber(Integer cardNumber);
 

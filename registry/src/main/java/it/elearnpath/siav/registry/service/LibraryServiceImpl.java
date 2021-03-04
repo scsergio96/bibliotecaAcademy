@@ -28,7 +28,7 @@ public class LibraryServiceImpl implements LibraryService {
     public Boolean switchBookIsAvailable(BookDTO bookDTO) {
         String url = "http://localhost:8080/books/update";
 
-        bookDTO.setIsAvailable(!bookDTO.getIsAvailable());
+        bookDTO.setIsAvailable(false);
 
         restTemplate.put(url, bookDTO);
 

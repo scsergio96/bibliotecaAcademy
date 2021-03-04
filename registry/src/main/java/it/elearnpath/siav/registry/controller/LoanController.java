@@ -69,7 +69,7 @@ public class LoanController {
     public ResponseEntity<LoanDTO> insertLoanByReaderCardNumberAndBookId(@RequestBody LoanDTO loanDTO)
             throws BadRequestException {
 
-        LoanDTO loanInserted = loanService.insertLoanByValidReaderCardNumberAndBookId(loanDTO);
+        LoanDTO loanInserted = loanService.insertLoanByValidReaderIdAndBookId(loanDTO);
 
         return new ResponseEntity<LoanDTO>(loanInserted, HttpStatus.CREATED);
     }

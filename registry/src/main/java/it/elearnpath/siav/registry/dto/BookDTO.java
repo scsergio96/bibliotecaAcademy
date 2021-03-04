@@ -23,7 +23,7 @@ public class BookDTO {
 
     private String casaEditrice;
 
-    private String genere;
+    private GenereDTO genere;
 
     private Integer posizione;
 

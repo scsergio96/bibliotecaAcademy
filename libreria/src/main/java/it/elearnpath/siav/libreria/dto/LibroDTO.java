@@ -36,8 +36,7 @@ public class LibroDTO {
     private String descrizione;
 
     private String casaEditrice;
-    
-    @NotBlank(message = "{NotBlank.Libro.genere.Validation}")
+
     private GenereDTO genere;
 
     private Integer ristampa;

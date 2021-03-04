@@ -16,4 +16,6 @@ public interface LoanService {
     LoanDTO updateLoanIfPresent(LoanDTO loanDTO) throws BadRequestException;
 
     LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException;
+
+    LoanDTO insertLoanByValidReaderIdAndBookId(LoanDTO loanDTO) throws BadRequestException;
 }

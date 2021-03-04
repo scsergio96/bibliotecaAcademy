@@ -132,4 +132,24 @@ public class LoanServiceImpl implements LoanService{
             throw new BadRequestException("The book is not currently available");
         }
     }
+
+    @Override
+    public LoanDTO insertLoanByValidReaderIdAndBookId(LoanDTO loanDTO) throws BadRequestException {
+
+        Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
+        BookDTO bookDTO = bookId.map(libraryService::searchBookById)
+                .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
+
+        Optional<Integer> readerId = Optional.ofNullable(loanDTO.getIdReader());
+        ReaderDTO readerDTO = readerId.map(readerService::findReaderById)
+                .orElseThrow(() -> new BadRequestException("Reader id missing or not present in the database"));
+
+        if (bookDTO.getIsAvailable()) {
+            Loan loan = save(loanDTO);
+            libraryService.switchBookIsAvailable(bookDTO);
+            return LoanConverter.convert(loan);
+        } else {
+            throw new BadRequestException("The book is not currently available");
+        }
+    }
 }
