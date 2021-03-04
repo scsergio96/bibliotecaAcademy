@@ -66,7 +66,7 @@ public class LibroServiceImplTest {
         libro.setId(id);
         libro.setIsbn("12345678911");
         libro.setTitolo("prova");
-        libro.setGenere("prova");
+        // libro.setGenere("prova");
         libro.setPagine(100);
         libro.setRistampa(1);
         libro.setDescrizione("Descrizione");
@@ -135,7 +135,7 @@ public class LibroServiceImplTest {
 
         libro.setIsbn("12345678911");
         libro.setTitolo("prova unit service");
-        libro.setGenere("prova");
+        // libro.setGenere("prova");
         libro.setPagine(100);
         libro.setRistampa(1);
         libro.setDescrizione("Descrizione");

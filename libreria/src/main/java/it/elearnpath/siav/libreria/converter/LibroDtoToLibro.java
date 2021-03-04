@@ -15,6 +15,7 @@ import it.elearnpath.siav.libreria.entity.Libro;
 import it.elearnpath.siav.libreria.entity.Scaffale;
 import it.elearnpath.siav.libreria.repository.AutoreRepository;
 import it.elearnpath.siav.libreria.repository.CasaEditriceRepository;
+import it.elearnpath.siav.libreria.repository.GenereRepository;
 import it.elearnpath.siav.libreria.service.ScaffaleService;
 
 @Component
@@ -28,6 +29,12 @@ public class LibroDtoToLibro {
 
     @Autowired
     AutoreRepository autoreRepository;
+
+    @Autowired
+    GenereRepository genereRepository;
+
+    @Autowired
+    GenereDtoToGenere genereDtoToGenere;
 
     public Libro convert(LibroDTO libroDTO) {
 
@@ -51,7 +58,7 @@ public class LibroDtoToLibro {
         libro.setDescrizione(libroDTO.getDescrizione());
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
-        libro.setGenere(libroDTO.getGenere());
+        libro.setGenere(genereDtoToGenere.convertWithId(libroDTO.getGenere()));
         libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
         libro.setAvailable(libroDTO.getIsAvailable());
@@ -82,7 +89,7 @@ public class LibroDtoToLibro {
         libro.setDescrizione(libroDTO.getDescrizione());
         libro.setAutori(autori);
         libro.setCasaEditrice(casaEditriceRepository.findByRagioneSocialeLike(libroDTO.getCasaEditrice()));
-        libro.setGenere(libroDTO.getGenere());
+        libro.setGenere(genereDtoToGenere.convertWithId(libroDTO.getGenere()));
         libro.setPosizioneBiblioteca(scaffale);
         libro.setLingua(libroDTO.getLingua());
         libro.setAvailable(libroDTO.getIsAvailable());

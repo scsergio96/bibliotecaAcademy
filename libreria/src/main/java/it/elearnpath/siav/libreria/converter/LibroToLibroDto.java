@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import it.elearnpath.siav.libreria.dto.LibroDTO;
@@ -11,6 +12,9 @@ import it.elearnpath.siav.libreria.entity.Libro;
 
 @Component
 public class LibroToLibroDto {
+
+    @Autowired
+    GenereToGenereDTO genereDTO;
 
     public LibroDTO convert(Libro libro) {
 
@@ -28,7 +32,7 @@ public class LibroToLibroDto {
         libroDTO.setUltimaStampa(convertDateToString(libro.getUltimaRistampa()));
         libroDTO.setDescrizione(libro.getDescrizione());
         libroDTO.setCasaEditrice(libro.getCasaEditrice().getRagioneSociale());
-        libroDTO.setGenere(libro.getGenere());
+        libroDTO.setGenere(genereDTO.convert(libro.getGenere()));
         libroDTO.setPosizione(libro.getPosizioneBiblioteca().getNumero());
         libroDTO.setRipiano(libro.getPosizioneBiblioteca().getRipiano());
         libroDTO.setLingua(libro.getLingua());

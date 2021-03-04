@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
+import it.elearnpath.siav.libreria.entity.Genere;
 import lombok.Data;
 
 @Data
@@ -39,14 +39,13 @@ public class LibroDTO {
     private String casaEditrice;
     
     @NotBlank(message = "{NotBlank.Libro.genere.Validation}")
-    @Size(max = 50, message = "{Size.Libro.genere.Validation}")
-    private String genere;
+    private GenereDTO genere;
 
     private Integer ristampa;
 
     private Integer posizione;
     
-    @Min(value = 1, message = "{Min.Libro.ripiano.Validation}")
+    @Min(value = -1, message = "{Min.Libro.ripiano.Validation}")
     @Max(value = 5 , message = "{Max.Libro.ripiano.Validation}")
     private Integer ripiano;
     

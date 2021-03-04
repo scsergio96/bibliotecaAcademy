@@ -38,11 +38,11 @@ public class LibroRepositoryTest {
 
     }
 
-    @Test
-    public void getNumForGenres() {
-        List<String> topGeneri = libroRepository.getNumForGenres();
-        assertEquals(7, topGeneri.size());
-    }
+    // @Test
+    // public void getNumForGenres() {
+    //     List<String> topGeneri = libroRepository.getNumForGenres();
+    //     assertEquals(7, topGeneri.size());
+    // }
 
     @Test
     public void findByIsbnLike() {
@@ -56,11 +56,11 @@ public class LibroRepositoryTest {
         assertEquals(2, libri.size());
     }
 
-    @Test
-    public void findAllByGenereIgnoreCase() {
-        List<Libro> libri = libroRepository.findAllByGenereIgnoreCase("horror");
-        assertEquals(3, libri.size());
-    }
+    // @Test
+    // public void findAllByGenereIgnoreCase() {
+    //     List<Libro> libri = libroRepository.findAllByGenereIgnoreCase("horror");
+    //     assertEquals(3, libri.size());
+    // }
 
 }
     

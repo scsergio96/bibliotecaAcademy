@@ -24,7 +24,7 @@ public interface LibroService {
 
     public List<String> getGenres();
 
-    //public List<String> getNumGenre();
+    // public List<String> getNumGenre();
 
     public List<CountGenresDTO> getNumGenre();
 
@@ -34,7 +34,7 @@ public interface LibroService {
 
     public List<Libro> getLibriByTitolo (String titolo);
 
-    public List<Libro> getLibriByGenere (String genere);
+    public List<Libro> getLibriByGenere (Integer id);
 
     public List<Libro> getLibriByAutore (Integer id);
 }
