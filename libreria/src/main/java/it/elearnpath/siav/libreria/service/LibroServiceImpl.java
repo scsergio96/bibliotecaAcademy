@@ -71,23 +71,16 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public List<Libro> getLibriByTitolo(String titolo) {        
+    public List<Libro> getLibriByTitolo(String titolo) {
         return libroRepository.findAllByTitoloContainingIgnoreCase(titolo);
     }
 
-   
-
-    // @Override
-    // public List<String> getNumGenre() {
-    //     List<String> numGenre = libroRepository.getNumForGenres();
-    //     return numGenre;
-    // }
 
     @Override
     public List<CountGenresDTO> getNumGenre(){
         List<String> numGenre = libroRepository.getNumForGenres();
         List<CountGenresDTO> countGenresDTOList = numGenre.stream()
-                                                          .map(num -> new CountGenresDTO(num.substring(0, 1), num.substring(2)))
+                                                          .map(num -> new CountGenresDTO((Integer.parseInt(num.substring(0,1))), num.substring(2,3), num.substring(4)))
                                                           .collect(Collectors.toList());
 
 
@@ -95,12 +88,17 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public List<Libro> getLibriByGenere(Integer id) {        
+    public List<Libro> getLibriByGenere(Integer id) {
         return libroRepository.findAllByGenere(id);
     }
-  
+
     @Override
     public List<Libro> getLibriByAutore(Integer id) {
         return libroRepository.findAllLibroByAutore(id);
+    }
+
+    @Override
+    public List<Libro> getLibriByTitoloLike(String titolo) {
+        return libroRepository.findAllByTitoloLike(titolo);
     }
 }

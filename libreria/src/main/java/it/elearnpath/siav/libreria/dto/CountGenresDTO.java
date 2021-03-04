@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CountGenresDTO {
 
+    private Integer id;
     private String count;
     private String genre;
     

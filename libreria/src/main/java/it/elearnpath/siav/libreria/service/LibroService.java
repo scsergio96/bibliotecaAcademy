@@ -23,8 +23,6 @@ public interface LibroService {
 
     public List<String> getGenres();
 
-    // public List<String> getNumGenre();
-
     public List<CountGenresDTO> getNumGenre();
 
     public List<Libro> getLibroByIdOrIsbnOrTitolo(Integer id, String isbn, String titolo);
@@ -32,6 +30,8 @@ public interface LibroService {
     public Optional<Libro> getLibroByIsbn(String isbn);
 
     public List<Libro> getLibriByTitolo (String titolo);
+
+    public List<Libro> getLibriByTitoloLike (String titolo);
 
     public List<Libro> getLibriByGenere (Integer id);
 
