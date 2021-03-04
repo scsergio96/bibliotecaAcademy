@@ -76,15 +76,21 @@ public class LibroServiceImpl implements LibroService {
     }
 
 
-    @Override
-    public List<CountGenresDTO> getNumGenre(){
-        List<String> numGenre = libroRepository.getNumForGenres();
-        List<CountGenresDTO> countGenresDTOList = numGenre.stream()
-                                                          .map(num -> new CountGenresDTO((Integer.parseInt(num.substring(0,1))), num.substring(2,3), num.substring(4)))
-                                                          .collect(Collectors.toList());
+    // @Override
+    // public List<CountGenresDTO> getNumGenre(){
+    //     List<String> numGenre = libroRepository.getNumForGenres();
+    //     List<CountGenresDTO> countGenresDTOList = numGenre.stream()
+    //                                                       .map(num -> new CountGenresDTO((Integer.parseInt(num.substring(0,1))), num.substring(2,3), num.substring(4)))
+    //                                                       .collect(Collectors.toList());
 
 
-        return countGenresDTOList;
+    //     return countGenresDTOList;
+    // }
+
+        @Override
+    public List<CountGenresDTO> getNumGenre() {
+        List<CountGenresDTO> numGenre = libroRepository.getNumForGenres();
+        return numGenre;
     }
 
     @Override

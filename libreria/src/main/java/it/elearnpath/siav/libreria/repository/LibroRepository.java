@@ -1,5 +1,6 @@
 package it.elearnpath.siav.libreria.repository;
 
+import it.elearnpath.siav.libreria.dto.CountGenresDTO;
 import it.elearnpath.siav.libreria.entity.Libro;
 
 import java.util.List;
@@ -18,8 +19,11 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     @Query(value = "SELECT genere FROM biblioteca.libro group by genere", nativeQuery = true)
     public List<String> getAllGenres();
 
-    @Query(value = "SELECT g.id, count(*), g.genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere;", nativeQuery = true)
-    public List<String> getNumForGenres();
+    // @Query(value = "SELECT g.id, count(*), g.genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere;", nativeQuery = true)
+    // public List<CountGenresDTO> getNumForGenres();
+
+    @Query(value = "SELECT g.id as id, count(*) as count, g.genere as genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere", nativeQuery = true)
+    public List<CountGenresDTO> getNumForGenres();
 
     public Optional<Libro> findByIsbnLike(String isbn);
 
