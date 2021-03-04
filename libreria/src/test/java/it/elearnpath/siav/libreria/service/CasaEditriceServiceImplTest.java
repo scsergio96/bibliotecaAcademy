@@ -1,17 +1,27 @@
 package it.elearnpath.siav.libreria.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.Mockito.doReturn;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
 
 import it.elearnpath.siav.libreria.converter.CasaEditriceDtoToCasaEditrice;
 import it.elearnpath.siav.libreria.converter.CasaEditriceToCasaEditriceDto;
@@ -25,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@Disabled
 public class CasaEditriceServiceImplTest {
 
     @Mock
@@ -64,39 +75,69 @@ public class CasaEditriceServiceImplTest {
         
         Integer id = 1;
 
-        Optional<CasaEditrice> casaEditriceOpt = Optional.of(casaEditrice);
-        doReturn(casaEditriceOpt).when(repository).findById(id);
-        // when(repository.findById(1)).thenReturn(casaEditriceOpt);
+        Optional<CasaEditrice> casaEditriceOpt = Optional.ofNullable(casaEditrice);
+        //doReturn(casaEditriceOpt).when(repository).findById(id);
+        when(repository.findById(id)).thenReturn(casaEditriceOpt);
 
         CasaEditriceDTO search = service.searchById(id);
 
-        assertEquals(search, toDTO.convert(casaEditrice));
+        assertSame(search, toDTO.convert(casaEditrice));
+
         verify(repository, times(1)).findById(id);
 
     }
 
-    // @Test
-    // public void searchByRagSocialeTest() {
+    @Test
+    public void searchByRagSocialeTest() {
 
-    //     when(repository.findByRagioneSocialeLike(anyString())).thenReturn(casaEditrice);
-        
-    //     CasaEditriceDTO search = service.searchByRagSociale(anyString());
+        when(repository.findByRagioneSocialeLike("test ragione sociale")).thenReturn(casaEditrice);
+     
+        CasaEditriceDTO search = service.searchByRagSociale("test ragione sociale");
 
-    //     assertEquals("11111111111", search.getPIva());
+        assertEquals(search, toDTO.convert(casaEditrice));
+        verify(repository, times(1)).findByRagioneSocialeLike("test ragione sociale");
 
-    //     verify(repository).findById(any());
+    }
 
-    // }
 
-    // @Test
-    // public void addNewCasaEdi() {
+    @Test
+    public void searchPIvaTest() {
 
-    //     when(repository.save(any())).thenReturn(casaEditrice);
+        when(repository.findBypIvaLike("11111111111")).thenReturn(casaEditrice);
+     
+        CasaEditriceDTO search = service.searchByRagSociale("test ragione sociale");
 
-    //     CasaEditriceDTO casaEditriceDTO = service.searchById(casaEditrice.getId());
+        assertEquals(search, toDTO.convert(casaEditrice));
+        verify(repository, times(1)).findBypIvaLike("11111111111");
 
-    //     assertEquals(1, casaEditriceDTO.getId());
+    }
 
-    // }
-    
+
+    @Test
+    public void searchByIdOrRagSocialeOrPivaTest() throws Exception {
+
+        List<CasaEditrice> casaEditriceList = new ArrayList<>();
+        casaEditriceList.add(create(1));
+        casaEditriceList.add(create(2));
+
+        when(repository.findAll(Example.of(casaEditrice))).thenReturn(casaEditriceList);
+
+
+        List<CasaEditriceDTO> casaEditriceDTOList = service.searchByIdOrRagSocialeOrPiva(1, "test ragione sociale", "11111111111");
+
+        assertEquals(1, casaEditriceDTOList.size());
+    }
+
+
+    @Test
+    public void addNewCasaEdi() {
+
+        when(repository.save(any())).thenReturn(casaEditrice);
+
+        CasaEditriceDTO casaEditriceDTO = service.searchById(casaEditrice.getId());
+
+        assertNotNull(casaEditriceDTO);
+
+    }
+
 }

@@ -127,7 +127,7 @@ public class CasaEditriceServiceImpl implements CasaEditriceService {
      * @param ragSociale noiminativo che vogliamo utilizzare per effettuare la ricerca nel db
      * @return se viene ritrovato un elemento viene restituito la conversione di questo altrimento viene restituito il valore null
      */
-    @Override
+    @Override 
     public CasaEditriceDTO searchByRagSociale(String ragSociale) {
         CasaEditrice casaEditrice = casaEditriceRepository.findByRagioneSocialeLike(ragSociale);
 
