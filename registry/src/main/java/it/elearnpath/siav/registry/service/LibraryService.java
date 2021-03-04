@@ -6,5 +6,7 @@ public interface LibraryService {
 
     BookDTO searchBookById(Integer id);
 
-    Boolean switchBookIsAvailable(BookDTO bookDTO);
+    Boolean setBookIsAvailableFalse(BookDTO bookDTO);
+
+    Boolean setBookIsAvailableTrue(BookDTO bookDTO);
 }
