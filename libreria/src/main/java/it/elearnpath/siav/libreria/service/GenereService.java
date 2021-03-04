@@ -15,4 +15,6 @@ public interface GenereService {
 
     public List<Genere> getGeneri();
 
+    public Optional<Genere> getGenereByName(String genere);
+
 }

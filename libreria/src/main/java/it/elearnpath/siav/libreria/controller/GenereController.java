@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import it.elearnpath.siav.libreria.converter.GenereDtoToGenere;
 import it.elearnpath.siav.libreria.dto.GenereDTO;
 import it.elearnpath.siav.libreria.entity.Genere;
+import it.elearnpath.siav.libreria.exception.DuplicateException;
 import it.elearnpath.siav.libreria.service.GenereService;
 
 @RestController
@@ -40,12 +41,19 @@ public class GenereController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<GenereDTO> addGenere(@RequestBody GenereDTO genereDTO) {
+    public ResponseEntity<GenereDTO> addGenere(@RequestBody GenereDTO genereDTO) throws DuplicateException{
 
         Genere genere = genereDtoToGenere.convert(genereDTO);
+        if (genereService.getGenereByName(genere.getGenere()).isPresent()) {
+            String errMsg = String.format("Il genere %s è già presente", genereDTO.getGenere());
+            throw new DuplicateException(errMsg);
+        }
+
         genereService.addGenere(genere);
 
         return new ResponseEntity<GenereDTO>(HttpStatus.CREATED);
     }
+
+    
 
 }

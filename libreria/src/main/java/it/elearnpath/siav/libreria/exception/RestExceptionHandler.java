@@ -34,7 +34,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateException.class)
-    public ResponseEntity<ErrorResponse> exceptionDeplicateRecordHandler(Exception ex) {
+    public ResponseEntity<ErrorResponse> exceptionDuplicateRecordHandler(Exception ex) {
         ErrorResponse errore = new ErrorResponse();
 
         errore.setCodice(HttpStatus.NOT_ACCEPTABLE.value());
