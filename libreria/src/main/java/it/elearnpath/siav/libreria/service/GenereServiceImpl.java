@@ -21,7 +21,8 @@ public class GenereServiceImpl implements GenereService {
     }
 
     @Override
-    public void addGenere(Genere genere) {
+    public void addGenere(Genere genere) {        
+
         genereRepository.save(genere);
     }
 
@@ -34,6 +35,13 @@ public class GenereServiceImpl implements GenereService {
     public List<Genere> getGeneri() {
         return genereRepository.findAll();
     }
+
+    @Override
+    public Optional<Genere> getGenereByName(String genere) {
+        return genereRepository.findByGenereIgnoreCase(genere);
+    }
+
+
     
 
 
