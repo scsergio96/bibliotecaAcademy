@@ -19,7 +19,7 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     @Query(value = "SELECT genere FROM biblioteca.libro group by genere", nativeQuery = true)
     public List<String> getAllGenres();
 
-    @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
+    @Query(value = "SELECT count(*), g.genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere;", nativeQuery = true)
     public List<String> getNumForGenres();
 
     // @Query(value = "SELECT COUNT(*), genere FROM libro GROUP BY genere;", nativeQuery = true)
