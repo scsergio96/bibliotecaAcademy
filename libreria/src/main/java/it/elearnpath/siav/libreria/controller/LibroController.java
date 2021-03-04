@@ -104,15 +104,39 @@ public class LibroController {
 
         }
 
+        // @ApiOperation(value = "Ricerca tutti i libri che contengono la stringa titolo
+        // inserita nel path", notes = "Case insensitive"
+        // + "I dati sono restituiti in formato JSON", response = LibroDTO.class,
+        // produces = "application/json")
+        // @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
+        // @ApiResponse(code = 400, message = "Errore generico") })
+        // @GetMapping(value = "/search/titolo/{titolo}")
+        // public ResponseEntity<List<LibroDTO>>
+        // searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
+        // throws NotFoundException {
+
+        // List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
+        // .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
+
+        // if (libri.size() == 0) {
+        // String errMsg = String.format("Non sono stati trovati libri con titolo %s",
+        // titolo);
+        // throw new NotFoundException(errMsg);
+        // }
+
+        // return new ResponseEntity<List<LibroDTO>>(libri, HttpStatus.OK);
+
+        // }
+
         @ApiOperation(value = "Ricerca tutti i libri che contengono la stringa titolo inserita nel path", notes = "Case insensitive"
                         + "I dati sono restituiti in formato JSON", response = LibroDTO.class, produces = "application/json")
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Tutto bene"),
                         @ApiResponse(code = 400, message = "Errore generico") })
         @GetMapping(value = "/search/titolo/{titolo}")
-        public ResponseEntity<List<LibroDTO>> searchAllByTitoloContains(@PathVariable("titolo") @Valid String titolo)
+        public ResponseEntity<List<LibroDTO>> searchAllByTitoloLike(@PathVariable("titolo") @Valid String titolo)
                         throws NotFoundException {
 
-                List<LibroDTO> libri = (libroService.getLibriByTitolo(titolo)).stream()
+                List<LibroDTO> libri = (libroService.getLibriByTitoloLike("%"+titolo+"%")).stream()
                                 .map(libro -> libroToLibroDto.convert(libro)).collect(Collectors.toList());
 
                 if (libri.size() == 0) {
@@ -194,12 +218,12 @@ public class LibroController {
         public ResponseEntity<List<String>> showGenres() throws NotFoundException {
 
                 List<String> genres = libroService.getGenres();
-                
+
                 if (genres.size() == 0) {
                         String errMsg = String.format("Non sono stati trovati genere");
                         throw new NotFoundException(errMsg);
                 }
-                
+
                 return new ResponseEntity<List<String>>(genres, HttpStatus.OK);
         }
 
