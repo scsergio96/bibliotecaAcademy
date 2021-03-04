@@ -126,7 +126,7 @@ public class ReaderServiceImpl implements ReaderService{
         }
 
         if (oldReader.isPresent()) {
-            Reader reader = ReaderConverter.convert(readerDTO);
+            Reader reader = ReaderConverter.convertWithId(readerDTO);
             Reader savedReader = readerRepository.save(reader);
             return ReaderConverter.convert(savedReader);
         } else {

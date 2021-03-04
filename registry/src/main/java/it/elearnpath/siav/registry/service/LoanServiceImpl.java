@@ -72,14 +72,15 @@ public class LoanServiceImpl implements LoanService{
             throw new BadRequestException("Loan id cannot be null");
         }
 
-        // TODO test actual functionality
         if (oldLoan.isPresent()) {
             if (oldLoan.get().getEnd() == null && loan.getEnd() != null) {
                 BookDTO bookDTO = libraryService.searchBookById(loan.getIdBook());
                 libraryService.setBookIsAvailableTrue(bookDTO);
+                loanRepository.save(loan);
+                return LoanConverter.convert(loan);
+            } else {
+                throw new BadRequestException("Changing a closed loan is forbidden");
             }
-            loanRepository.save(loan);
-            return LoanConverter.convert(loan);
         } else {
             throw new BadRequestException("Loan not present in the repository");
         }
@@ -98,6 +99,34 @@ public class LoanServiceImpl implements LoanService{
         return loanRepository.save(loan);
     }
 
+
+//    @Override
+//    public LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException {
+//
+//        if (loanDTO.getEnd() != null) {
+//            throw new BadRequestException("The end date should not be present or must be null");
+//        }
+//
+//        Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
+//        BookDTO bookDTO = bookId.map(libraryService::searchBookById)
+//                .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
+//
+//        Optional<Integer> cardNumber = Optional.ofNullable(loanDTO.getCardNumber());
+//        ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
+//                .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
+//
+//        // TODO use the converter to return the saved Loan
+//        if (bookDTO.getIsAvailable()) {
+//            loanDTO.setIdReader(readerDTO.getId());
+//            Loan loan = save(loanDTO);
+//            loanDTO.setId(loan.getId());
+//            libraryService.setBookIsAvailableFalse(bookDTO);
+//            return loanDTO;
+//        } else {
+//            throw new BadRequestException("The book is not currently available");
+//        }
+//    }
+
     /**
      * Method to insert a valid Loan in the database.
      * Check if the reader (id) is present. Call the library service to check if the book is present and available.
@@ -110,33 +139,6 @@ public class LoanServiceImpl implements LoanService{
      * @throws BadRequestException in case a bookId or a cardNumber is not present in the loanDTO, the reader is not
      * present in the DB, the book is not available.
      */
-    @Override
-    public LoanDTO insertLoanByValidReaderCardNumberAndBookId(LoanDTO loanDTO) throws BadRequestException {
-
-        if (loanDTO.getEnd() != null) {
-            throw new BadRequestException("The end date should not be present or must be null");
-        }
-
-        Optional<Integer> bookId = Optional.ofNullable(loanDTO.getIdBook());
-        BookDTO bookDTO = bookId.map(libraryService::searchBookById)
-                .orElseThrow(() -> new BadRequestException("Book id required or not present in the database"));
-
-        Optional<Integer> cardNumber = Optional.ofNullable(loanDTO.getCardNumber());
-        ReaderDTO readerDTO = cardNumber.map(readerService::findByCardNumber)
-                .orElseThrow(() -> new BadRequestException("Card number missing or not present in the database"));
-
-        // TODO use the converter to return the saved Loan
-        if (bookDTO.getIsAvailable()) {
-            loanDTO.setIdReader(readerDTO.getId());
-            Loan loan = save(loanDTO);
-            loanDTO.setId(loan.getId());
-            libraryService.setBookIsAvailableFalse(bookDTO);
-            return loanDTO;
-        } else {
-            throw new BadRequestException("The book is not currently available");
-        }
-    }
-
     @Override
     public LoanDTO insertLoanByValidReaderIdAndBookId(LoanDTO loanDTO) throws BadRequestException {
 
