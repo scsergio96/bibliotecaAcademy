@@ -20,4 +20,8 @@ public interface LoanService {
     LoanDTO insertLoanByValidReaderIdAndBookId(LoanDTO loanDTO) throws BadRequestException;
 
     LoanDTO searchPendingLoanByBookId(Integer idBook) throws BadRequestException;
+
+    LoanDTO sagaInsertLoan(LoanDTO loanDTO) throws BadRequestException;
+
+    void sagaInsertLoanRollback(Integer id);
 }

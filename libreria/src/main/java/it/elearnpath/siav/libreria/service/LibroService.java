@@ -3,6 +3,7 @@ package it.elearnpath.siav.libreria.service;
 import java.util.List;
 import java.util.Optional;
 
+import it.elearnpath.siav.libreria.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -36,4 +37,6 @@ public interface LibroService {
     public List<Libro> getLibriByGenere (Integer id);
 
     public List<Libro> getLibriByAutore (Integer id);
+
+    void switchIsAvailable(Integer id, boolean isAvailable) throws NotFoundException;
 }

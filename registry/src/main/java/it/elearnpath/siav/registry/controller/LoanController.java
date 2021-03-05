@@ -100,4 +100,20 @@ public class LoanController {
 
     }
 
+    @PostMapping("/saga/add")
+    public ResponseEntity<LoanDTO> sagaInsertLoan(@RequestBody LoanDTO loanDTO) throws BadRequestException {
+
+        LoanDTO savedLoanDTO = loanService.sagaInsertLoan(loanDTO);
+
+        return new ResponseEntity<LoanDTO>(savedLoanDTO, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/saga/delete/{id}")
+    public ResponseEntity<LoanDTO> sagaInsertLoanRollback(@PathVariable Integer id) {
+
+        loanService.sagaInsertLoanRollback(id);
+
+        return new ResponseEntity<LoanDTO>(HttpStatus.OK);
+    }
+
 }

@@ -7,6 +7,7 @@ import it.elearnpath.siav.registry.entity.Reader;
 import it.elearnpath.siav.registry.exception.BadRequestException;
 import it.elearnpath.siav.registry.repository.ReaderRepository;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,20 +44,27 @@ public class ReaderServiceImpl implements ReaderService{
 
 
     /**
-     * Simple search by id and cardNumber calling the query by example method in the reader repository.
-     * Can be use to retrieve all the records if both params are null (not recommended).
+     * Search by id, cardNumber, name or surname calling the query by example method in the reader repository.
      *
      * @param id can be null
      * @param cardNumber can be null
+     * @param name can be null
+     * @param surname can be null
      * @return List(ReaderDTO)
      */
     @Override
-    public List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber) {
+    public List<ReaderDTO> searchByIdOrCardNumberOrNameOrSurname(Integer id, Integer cardNumber, String name, String surname) {
         Reader readerExample = new Reader();
         readerExample.setId(id);
         readerExample.setCardNumber(cardNumber);
+        readerExample.setName(name);
+        readerExample.setSurname(surname);
 
-        List<Reader> readers = readerRepository.findAll(Example.of(readerExample));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("name", nome -> nome.ignoreCase().contains())
+                .withMatcher("surname", cognome -> cognome.ignoreCase().contains());
+
+        List<Reader> readers = readerRepository.findAll(Example.of(readerExample, matcher));
         List<ReaderDTO> readerDTOs = new ArrayList<>();
 
         readerDTOs = readers.stream()

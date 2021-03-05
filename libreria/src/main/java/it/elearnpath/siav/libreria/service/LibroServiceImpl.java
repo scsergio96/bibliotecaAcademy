@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import it.elearnpath.siav.libreria.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -106,5 +107,14 @@ public class LibroServiceImpl implements LibroService {
     @Override
     public List<Libro> getLibriByTitoloLike(String titolo) {
         return libroRepository.findAllByTitoloLike(titolo);
+    }
+
+    @Override
+    public void switchIsAvailable(Integer id, boolean isAvailable) throws NotFoundException {
+        Optional<Libro> libroOptional = libroRepository.findById(id);
+        if (libroOptional.isPresent()) {
+            libroOptional.get().setAvailable(isAvailable);
+            libroRepository.save(libroOptional.get());
+        } else throw new NotFoundException();
     }
 }

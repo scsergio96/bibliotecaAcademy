@@ -304,4 +304,13 @@ public class LibroController {
                 return new ResponseEntity<LibroDTO>(HttpStatus.OK);
         }
 
+        @PutMapping("/saga/isavailable/{isAvailable}")
+        private ResponseEntity sagaSwitchIsAvailable(@RequestBody Integer id ,
+                                                     @PathVariable boolean isAvailable) throws NotFoundException {
+
+                libroService.switchIsAvailable(id, isAvailable);
+
+                return new ResponseEntity(HttpStatus.OK);
+        }
+
 }

@@ -63,14 +63,16 @@ public class ReaderController {
     })
     @GetMapping("/search")
     public ResponseEntity<List<ReaderDTO>> searchReaderByIdOrByCardNumber(@RequestParam(required = false) Integer id,
-                                                                          @RequestParam(required = false) Integer cardNumber)
+                                                                          @RequestParam(required = false) Integer cardNumber,
+                                                                          @RequestParam(required = false) String name,
+                                                                          @RequestParam(required = false) String surname)
             throws BadRequestException {
 
-        if (id == null && cardNumber == null) {
+        if (id == null && cardNumber == null && name == null && surname == null) {
             throw new BadRequestException("At least one parameter is required");
         }
 
-        List<ReaderDTO> readers = readerService.searchByIdOrCardNumber(id, cardNumber);
+        List<ReaderDTO> readers = readerService.searchByIdOrCardNumberOrNameOrSurname(id, cardNumber, name, surname);
 
         return new ResponseEntity<List<ReaderDTO>>(readers, HttpStatus.OK);
 

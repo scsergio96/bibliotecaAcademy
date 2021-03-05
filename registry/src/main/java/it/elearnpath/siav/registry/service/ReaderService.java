@@ -18,7 +18,9 @@ public interface ReaderService {
 
     ReaderDTO deleteReaderById(Integer id) throws BadRequestException;
 
-    List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber);
+//    List<ReaderDTO> searchByIdOrCardNumber(Integer id, Integer cardNumber);
 
     ReaderDTO insertNewReader(ReaderDTO readerDTO) throws BadRequestException;
+
+    List<ReaderDTO> searchByIdOrCardNumberOrNameOrSurname(Integer id, Integer cardNumber, String name, String surname);
 }

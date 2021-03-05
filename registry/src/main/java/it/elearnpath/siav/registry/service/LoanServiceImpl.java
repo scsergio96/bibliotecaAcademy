@@ -182,4 +182,16 @@ public class LoanServiceImpl implements LoanService{
             throw new BadRequestException("Fatal Error: the same book has been rented many times");
         }
     }
+
+    @Override
+    public LoanDTO sagaInsertLoan(LoanDTO loanDTO) throws BadRequestException {
+
+        return  LoanConverter.convert(save(loanDTO));
+    }
+
+    @Override
+    public void sagaInsertLoanRollback(Integer id) {
+
+        loanRepository.deleteById(id);
+    }
 }
