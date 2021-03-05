@@ -22,7 +22,7 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     // @Query(value = "SELECT g.id, count(*), g.genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere;", nativeQuery = true)
     // public List<CountGenresDTO> getNumForGenres();
 
-    @Query(value = "SELECT g.id as id, count(*) as count, g.genere as genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere", nativeQuery = true)
+    @Query(value = "SELECT g.id as id, count(*) as count, g.genere as genere FROM libro l LEFT JOIN genere g ON g.id = l.genere GROUP BY g.genere order by count desc", nativeQuery = true)
     public List<CountGenresDTO> getNumForGenres();
 
     public Optional<Libro> findByIsbnLike(String isbn);
